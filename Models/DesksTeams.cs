@@ -11,12 +11,12 @@ namespace deskManagerApi.Models
         public int Id { get; set; }
 
         [ForeignKey("Desk")]
-        public int DeskId { get; set; }
+        public int? DeskId { get; set; }
         public Desk? Desk { get; set; }
 
         [ForeignKey("Team")]
-        public int TeamId { get; set; }
-        public Desk? Team { get; set; }
+        public int? TeamId { get; set; }
+        public Team? Team { get; set; }
 
         #endregion
     }
