@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace deskManagerApi.Models
 {
-    public class DeskTeam
+    public class DesksTeams
     {
         #region Properties
 

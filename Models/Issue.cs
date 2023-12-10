@@ -19,6 +19,7 @@ namespace deskManagerApi.Models
         [ForeignKey("Reporter")]
         public int? ReporterId { get; set; }
         public User? Reporter { get; set; }
+        public ICollection<IssueHistory> History { get; set; }
 
         #endregion
     }

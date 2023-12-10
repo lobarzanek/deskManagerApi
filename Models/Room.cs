@@ -18,6 +18,7 @@ namespace deskManagerApi.Models
         [ForeignKey("Floor")]
         public int? FloorId { get; set; }
         public Floor? Floor { get; set; }
+        public ICollection<Desk> Desks { get; set; }
 
         #endregion
     }

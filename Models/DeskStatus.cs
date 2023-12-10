@@ -10,6 +10,7 @@ namespace deskManagerApi.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+        public ICollection<Desk> Desks { get;set; }
 
         #endregion
     }

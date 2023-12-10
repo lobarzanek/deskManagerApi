@@ -17,6 +17,9 @@ namespace deskManagerApi.Models
         [ForeignKey("Team")]
         public int? TeamId { get; set; }
         public Team? Team { get; set; }
+        public ICollection<Item> Items { get; set; }
+        public ICollection<Issue> Issues { get; set; }
+        public ICollection<IssueHistory> IssueHistories { get; set; }
 
         #endregion
     }

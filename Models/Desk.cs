@@ -22,6 +22,9 @@ namespace deskManagerApi.Models
         [ForeignKey("Status")]
         public int? StatusId;
         public DeskStatus? Status { get; set; }
+        public ICollection<DesksTeams> DesksTeams { get; set;}
+        public ICollection<Issue> Issues { get; set;}
+        public ICollection<Item> Items { get; set;}
 
         #endregion
     }
