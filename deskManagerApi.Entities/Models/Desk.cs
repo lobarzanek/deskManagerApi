@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace deskManagerApi.Models
 {
+    [Table("desks")]
     public class Desk
     {
         #region Properties and indexers

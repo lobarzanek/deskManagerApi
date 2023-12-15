@@ -3,22 +3,59 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace deskManagerApi.Models
 {
+    [Table("rooms")]
     public class Room
     {
-        #region Properties 
+        #region Properties and indexers
 
+        /// <summary>
+        /// Gets or sets the ID value of room.
+        /// </summary>
         [Key]
-        public int Id { get; set; }        
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name value of room.
+        /// </summary>
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(60, ErrorMessage = "Name can't be longer than 60 characters")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of map view box.
+        /// </summary>
         public string? mapViewBox { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of map width.
+        /// </summary>
         public string? mapWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of map height.
+        /// </summary>
         public string? mapHeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of xmlns.
+        /// </summary>
         public string mapXmlns { get; set; } = "http://www.w3.org/2000/svg";
 
+        /// <summary>
+        /// Gets or sets the value of floor ID.
+        /// </summary>
         [ForeignKey("Floor")]
         public int? FloorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of floor object.
+        /// </summary>
         public Floor? Floor { get; set; }
-        public ICollection<Desk> Desks { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of desks.
+        /// </summary>
+        public ICollection<Desk> Desks { get; set; } = new List<Desk>();
 
         #endregion
     }

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace deskManagerApi.Models
 {
+    [Table("buildings")]
     public class Building
     {
         #region Properties and indexers

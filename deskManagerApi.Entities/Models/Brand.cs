@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace deskManagerApi.Models
 {
+    [Table("brands")]
     public class Brand
     {
         #region Properties and indexers
@@ -22,7 +24,7 @@ namespace deskManagerApi.Models
         /// <summary>
         /// Gets or sets the collection of items.
         /// </summary>
-        public ICollection<Item> Items { get; set; }
+        public ICollection<Item> Items { get; set; } = new List<Item>();
 
         #endregion
     }
