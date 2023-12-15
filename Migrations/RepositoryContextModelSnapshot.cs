@@ -3,19 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using deskManagerApi.Data;
+using deskManagerApi.Entities;
 
 #nullable disable
 
 namespace deskManagerApi.Migrations
 {
-    [DbContext(typeof(DataContext))]
-    [Migration("20231210123326_Init")]
-    partial class Init
+    [DbContext(typeof(RepositoryContext))]
+    partial class RepositoryContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,11 +32,12 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands");
+                    b.ToTable("brand");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Building", b =>
@@ -55,7 +54,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Buildings");
+                    b.ToTable("Building");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Desk", b =>
@@ -94,7 +93,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Desks");
+                    b.ToTable("Desk");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.DeskStatus", b =>
@@ -111,7 +110,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeskStatuses");
+                    b.ToTable("DeskStatus");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.DesksTeams", b =>
@@ -134,7 +133,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("DeskTeams");
+                    b.ToTable("DesksTeams");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Floor", b =>
@@ -156,7 +155,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("BuildingId");
 
-                    b.ToTable("Floors");
+                    b.ToTable("Floor");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Issue", b =>
@@ -186,7 +185,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("ReporterId");
 
-                    b.ToTable("Issues");
+                    b.ToTable("Issue");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.IssueHistory", b =>
@@ -222,7 +221,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("IssueId");
 
-                    b.ToTable("IssuesHistories");
+                    b.ToTable("IssueHistory");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Item", b =>
@@ -266,7 +265,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Items");
+                    b.ToTable("Item");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Room", b =>
@@ -301,7 +300,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("FloorId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Room");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Team", b =>
@@ -318,7 +317,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Team");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.User", b =>
@@ -351,20 +350,18 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Desk", b =>
                 {
                     b.HasOne("deskManagerApi.Models.Room", "Room")
                         .WithMany("Desks")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("RoomId");
 
                     b.HasOne("deskManagerApi.Models.DeskStatus", "Status")
                         .WithMany("Desks")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("StatusId");
 
                     b.Navigation("Room");
 
@@ -375,13 +372,11 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Desk", "Desk")
                         .WithMany("DesksTeams")
-                        .HasForeignKey("DeskId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("DeskId");
 
                     b.HasOne("deskManagerApi.Models.Team", "Team")
                         .WithMany("DesksTeams")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("TeamId");
 
                     b.Navigation("Desk");
 
@@ -392,8 +387,7 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Building", "Building")
                         .WithMany("Floors")
-                        .HasForeignKey("BuildingId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("BuildingId");
 
                     b.Navigation("Building");
                 });
@@ -402,13 +396,11 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Desk", "Desk")
                         .WithMany("Issues")
-                        .HasForeignKey("DeskId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("DeskId");
 
                     b.HasOne("deskManagerApi.Models.User", "Reporter")
                         .WithMany("Issues")
-                        .HasForeignKey("ReporterId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("ReporterId");
 
                     b.Navigation("Desk");
 
@@ -419,13 +411,11 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.User", "User")
                         .WithMany("IssueHistories")
-                        .HasForeignKey("ChangedBy")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("ChangedBy");
 
                     b.HasOne("deskManagerApi.Models.Issue", "Issue")
                         .WithMany("History")
-                        .HasForeignKey("IssueId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("IssueId");
 
                     b.Navigation("Issue");
 
@@ -436,18 +426,15 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Brand", "Brand")
                         .WithMany("Items")
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("BrandId");
 
                     b.HasOne("deskManagerApi.Models.Desk", "Desk")
                         .WithMany("Items")
-                        .HasForeignKey("DeskId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("DeskId");
 
                     b.HasOne("deskManagerApi.Models.User", "Owner")
                         .WithMany("Items")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("OwnerId");
 
                     b.Navigation("Brand");
 
@@ -460,8 +447,7 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Floor", "Floor")
                         .WithMany("Rooms")
-                        .HasForeignKey("FloorId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("FloorId");
 
                     b.Navigation("Floor");
                 });
@@ -470,8 +456,7 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Team", "Team")
                         .WithMany("Users")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("TeamId");
 
                     b.Navigation("Team");
                 });
