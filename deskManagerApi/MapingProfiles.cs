@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using deskManagerApi.DTO.Create;
-using deskManagerApi.DTO.Get;
-using deskManagerApi.DTO.Update;
+using deskManagerApi.Entities.DTO.Create;
+using deskManagerApi.Entities.DTO.Get;
+using deskManagerApi.Entities.DTO.Update;
 using deskManagerApi.Models;
 
 namespace deskManagerApi.Helpers
