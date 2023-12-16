@@ -1,6 +1,8 @@
 ﻿using deskManagerApi.Contracts;
+using deskManagerApi.Contracts.IRepositoryModels;
 using deskManagerApi.Entities;
 using deskManagerApi.IRepository;
+using deskManagerApi.Repository.RepositoryModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +14,16 @@ namespace deskManagerApi.Repository
 
     public class RepositoryWrapper : IRepositoryWrapper
     {
+        #region Fields and Constants
+
         private RepositoryContext _context;
         private IBrandRepository _brand;
+        private IBuildingRepository _building;
+
+        #endregion
+
+        #region Properties and indexers
+
         public IBrandRepository Brand
         {
             get
@@ -26,13 +36,36 @@ namespace deskManagerApi.Repository
             }
         }
 
+        public IBuildingRepository Building
+        {
+            get
+            {
+                if (_building == null)
+                {
+                    _building = new BuildingRepository(_context);
+                }
+                return _building;
+            }
+        }
+
+        #endregion
+
+        #region Constructors and Destructors
+
         public RepositoryWrapper(RepositoryContext repositoryContext)
         {
             _context = repositoryContext;
         }
+
+        #endregion
+
+        #region Methods
+
         public async Task Save()
         {
             await _context.SaveChangesAsync();
         }
+
+        #endregion 
     }
 }

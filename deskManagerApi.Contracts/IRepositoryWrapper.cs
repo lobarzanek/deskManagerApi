@@ -1,4 +1,5 @@
-﻿using deskManagerApi.IRepository;
+﻿using deskManagerApi.Contracts.IRepositoryModels;
+using deskManagerApi.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace deskManagerApi.Contracts
     public interface IRepositoryWrapper
     {
         IBrandRepository Brand { get; }
+        IBuildingRepository Building { get; }
         Task Save();
     }
 }

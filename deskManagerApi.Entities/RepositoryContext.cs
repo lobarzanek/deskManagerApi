@@ -16,5 +16,6 @@ namespace deskManagerApi.Entities
         {
         }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<Brand> Buildings { get; set; }
     }
 }

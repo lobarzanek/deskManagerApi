@@ -20,7 +20,7 @@ namespace deskManagerApi.Repository
         public IQueryable<T> FindAll() => RepositoryContext.Set<T>().AsNoTracking();
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) =>
             RepositoryContext.Set<T>().Where(expression).AsNoTracking();
-        public async Task Create(T entity) => RepositoryContext.Set<T>().AddAsync(entity);
+        public async Task Create(T entity) => await RepositoryContext.Set<T>().AddAsync(entity);
         public void Update(T entity) => RepositoryContext.Set<T>().Update(entity);
         public void Delete(T entity) => RepositoryContext.Set<T>().Remove(entity);
     }
