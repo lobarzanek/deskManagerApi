@@ -2,9 +2,9 @@
 
 using AutoMapper;
 using deskManagerApi.Contracts;
-using deskManagerApi.DTO.Create;
-using deskManagerApi.DTO.Get;
-using deskManagerApi.DTO.Update;
+using deskManagerApi.Entities.DTO.Create;
+using deskManagerApi.Entities.DTO.Get;
+using deskManagerApi.Entities.DTO.Update;
 using deskManagerApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
