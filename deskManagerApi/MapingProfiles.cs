@@ -30,6 +30,8 @@ namespace deskManagerApi.Helpers
             CreateMap<Floor, GetFloorDto>();
             CreateMap<Issue, GetIssueDto>();
             CreateMap<Item, GetItemDto>();
+            CreateMap<Room, GetRoomDto>();
+            CreateMap<Team, GetTeamDto>();
 
             // Create DTO to Model
             CreateMap<CreateBrandDto, Brand>();
@@ -39,6 +41,8 @@ namespace deskManagerApi.Helpers
             CreateMap<CreateFloorDto, Floor>();
             CreateMap<CreateIssueDto, Issue>();
             CreateMap<CreateItemDto, Item>();
+            CreateMap<CreateRoomDto, Room>();
+            CreateMap<CreateTeamDto, Team>();
 
             // Update DTO to Model
             CreateMap<UpdateBrandDto, Brand>();
@@ -48,6 +52,9 @@ namespace deskManagerApi.Helpers
             CreateMap<UpdateFloorDto, Floor>();
             CreateMap<UpdateIssueDto, Issue>();
             CreateMap<UpdateItemDto, Item>();
+            CreateMap<UpdateRoomDto, Room>();
+            CreateMap<UpdateTeamDto, Team>();
+
         }
 
         #endregion
