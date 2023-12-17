@@ -13,6 +13,7 @@ namespace deskManagerApi.Contracts
         IBrandRepository Brand { get; }
         IBuildingRepository Building { get; }
         IDeskRepository Desk { get; }
+        IFloorRepository Floor { get; }
         Task Save();
     }
 }

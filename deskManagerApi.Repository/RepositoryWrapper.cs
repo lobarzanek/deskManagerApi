@@ -21,6 +21,7 @@ namespace deskManagerApi.Repository
         private IBrandRepository _brand;
         private IBuildingRepository _building;
         private IDeskRepository _desk;
+        private IFloorRepository _floor;
 
         #endregion
 
@@ -59,6 +60,17 @@ namespace deskManagerApi.Repository
                     _desk = new DeskRepository(_context);
                 }
                 return _desk;
+            }
+        }
+        public IFloorRepository Floor
+        {
+            get
+            {
+                if (_floor == null)
+                {
+                    _floor = new FloorRepository(_context);
+                }
+                return _floor;
             }
         }
 
