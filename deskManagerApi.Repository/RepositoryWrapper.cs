@@ -2,6 +2,7 @@
 using deskManagerApi.Contracts.IRepositoryModels;
 using deskManagerApi.Entities;
 using deskManagerApi.IRepository;
+using deskManagerApi.Models;
 using deskManagerApi.Repository.RepositoryModels;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace deskManagerApi.Repository
         private RepositoryContext _context;
         private IBrandRepository _brand;
         private IBuildingRepository _building;
+        private IDeskRepository _desk;
 
         #endregion
 
@@ -45,6 +47,18 @@ namespace deskManagerApi.Repository
                     _building = new BuildingRepository(_context);
                 }
                 return _building;
+            }
+        }
+
+        public IDeskRepository Desk
+        {
+            get
+            {
+                if (_desk == null)
+                {
+                    _desk = new DeskRepository(_context);
+                }
+                return _desk;
             }
         }
 
