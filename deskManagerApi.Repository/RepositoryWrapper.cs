@@ -23,7 +23,8 @@ namespace deskManagerApi.Repository
         private IDeskRepository _desk;
         private IFloorRepository _floor;
         private IIssueRepository _issue;
-        private IItemRepository _item;
+        private IItemRepository _item; 
+        private IRoomRepository _room;
 
         #endregion
 
@@ -95,6 +96,17 @@ namespace deskManagerApi.Repository
                     _item = new ItemRepository(_context);
                 }
                 return _item;
+            }
+        }
+        public IRoomRepository Room
+        {
+            get
+            {
+                if (_room == null)
+                {
+                    _room = new RoomRepository(_context);
+                }
+                return _room;
             }
         }
 
