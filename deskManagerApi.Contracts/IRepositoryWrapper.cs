@@ -14,6 +14,7 @@ namespace deskManagerApi.Contracts
         IBuildingRepository Building { get; }
         IDeskRepository Desk { get; }
         IFloorRepository Floor { get; }
+        IIssueRepository Issue { get; }
         Task Save();
     }
 }
