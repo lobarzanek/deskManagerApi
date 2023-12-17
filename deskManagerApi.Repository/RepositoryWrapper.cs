@@ -6,6 +6,7 @@ using deskManagerApi.Models;
 using deskManagerApi.Repository.RepositoryModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,8 @@ namespace deskManagerApi.Repository
         private IFloorRepository _floor;
         private IIssueRepository _issue;
         private IItemRepository _item; 
-        private IRoomRepository _room;
+        private IRoomRepository _room; 
+        private ITeamRepository _team;
 
         #endregion
 
@@ -107,6 +109,17 @@ namespace deskManagerApi.Repository
                     _room = new RoomRepository(_context);
                 }
                 return _room;
+            }
+        }
+        public ITeamRepository Team
+        {
+            get
+            {
+                if (_team == null)
+                {
+                    _team = new TeamRepository(_context);
+                }
+                return _team;
             }
         }
 
