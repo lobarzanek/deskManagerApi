@@ -30,12 +30,12 @@ namespace deskManagerApi.Repository.RepositoryModels
 
         public async Task<IEnumerable<Desk>> GetAllDesks()
         {
-            return await FindAll().OrderBy(b => b.Name).ToListAsync();
+            return await FindAll().OrderBy(d => d.Name).ToListAsync();
         }
 
         public async Task<Desk> GetDeskById(int id)
         {
-            return await FindByCondition(b => b.Id == id).FirstOrDefaultAsync();
+            return await FindByCondition(d => d.Id == id).FirstOrDefaultAsync();
         }
 
         public void UpdateDesk(Desk desk)
