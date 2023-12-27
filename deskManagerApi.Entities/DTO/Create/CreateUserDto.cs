@@ -1,18 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using deskManagerApi.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace deskManagerApi.Models
+namespace deskManagerApi.Entities.DTO.Create
 {
-    [Table("users")]
-    public class User
+    public class CreateUserDto
     {
         #region Properties and indexers
-
-        /// <summary>
-        /// Gets or sets the ID value of user.
-        /// </summary>
-        [Key]
-        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the firstname value of user.
@@ -52,26 +51,6 @@ namespace deskManagerApi.Models
         /// </summary>
         [ForeignKey("Team")]
         public int? TeamId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of team object.
-        /// </summary>
-        public Team? Team { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of Items.
-        /// </summary>
-        public ICollection<Item> Items { get; set; } = new List<Item>();
-
-        /// <summary>
-        /// Gets or sets the collection of Issues.
-        /// </summary>
-        public ICollection<Issue> Issues { get; set; } = new List<Issue>();
-
-        /// <summary>
-        /// Gets or sets the collection of Issue Histories.
-        /// </summary>
-        public ICollection<IssueHistory> IssueHistories { get; set; } = new List<IssueHistory>();
 
         #endregion
     }

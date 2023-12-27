@@ -12,8 +12,8 @@ using deskManagerApi.Entities;
 namespace deskManagerApi.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20231215180035_init")]
-    partial class init
+    [Migration("20231227193836_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,7 +39,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("brand");
+                    b.ToTable("brands");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Building", b =>
@@ -52,11 +52,12 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Building");
+                    b.ToTable("buildings");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Desk", b =>
@@ -67,10 +68,7 @@ namespace deskManagerApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("MapHeight")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MapWidth")
+                    b.Property<string>("Height")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MapXLocation")
@@ -81,7 +79,8 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<int?>("RoomId")
                         .HasColumnType("int");
@@ -89,13 +88,16 @@ namespace deskManagerApi.Migrations
                     b.Property<int?>("StatusId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Width")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RoomId");
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Desk");
+                    b.ToTable("desks");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.DeskStatus", b =>
@@ -108,11 +110,12 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeskStatus");
+                    b.ToTable("deskStatuses");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.DesksTeams", b =>
@@ -135,7 +138,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("DesksTeams");
+                    b.ToTable("deskTeams");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Floor", b =>
@@ -151,13 +154,14 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BuildingId");
 
-                    b.ToTable("Floor");
+                    b.ToTable("floors");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Issue", b =>
@@ -170,7 +174,8 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<int?>("DeskId")
                         .HasColumnType("int");
@@ -187,7 +192,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("ReporterId");
 
-                    b.ToTable("Issue");
+                    b.ToTable("issues");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.IssueHistory", b =>
@@ -207,10 +212,6 @@ namespace deskManagerApi.Migrations
                     b.Property<int?>("IssueId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("StatusFrom")
                         .HasColumnType("int");
 
@@ -223,7 +224,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("IssueId");
 
-                    b.ToTable("IssueHistory");
+                    b.ToTable("issueHistories");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Item", b =>
@@ -245,7 +246,8 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<int?>("OwnerId")
                         .HasColumnType("int");
@@ -267,7 +269,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Item");
+                    b.ToTable("items");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Room", b =>
@@ -283,7 +285,8 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("mapHeight")
                         .HasColumnType("nvarchar(max)");
@@ -302,7 +305,7 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("FloorId");
 
-                    b.ToTable("Room");
+                    b.ToTable("rooms");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Team", b =>
@@ -315,11 +318,12 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Team");
+                    b.ToTable("teams");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.User", b =>
@@ -332,15 +336,23 @@ namespace deskManagerApi.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -352,18 +364,20 @@ namespace deskManagerApi.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("User");
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.Desk", b =>
                 {
                     b.HasOne("deskManagerApi.Models.Room", "Room")
                         .WithMany("Desks")
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("deskManagerApi.Models.DeskStatus", "Status")
                         .WithMany("Desks")
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Room");
 
@@ -389,7 +403,8 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Building", "Building")
                         .WithMany("Floors")
-                        .HasForeignKey("BuildingId");
+                        .HasForeignKey("BuildingId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Building");
                 });
@@ -398,11 +413,13 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Desk", "Desk")
                         .WithMany("Issues")
-                        .HasForeignKey("DeskId");
+                        .HasForeignKey("DeskId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("deskManagerApi.Models.User", "Reporter")
                         .WithMany("Issues")
-                        .HasForeignKey("ReporterId");
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Desk");
 
@@ -413,7 +430,8 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.User", "User")
                         .WithMany("IssueHistories")
-                        .HasForeignKey("ChangedBy");
+                        .HasForeignKey("ChangedBy")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("deskManagerApi.Models.Issue", "Issue")
                         .WithMany("History")
@@ -428,15 +446,18 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Brand", "Brand")
                         .WithMany("Items")
-                        .HasForeignKey("BrandId");
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("deskManagerApi.Models.Desk", "Desk")
                         .WithMany("Items")
-                        .HasForeignKey("DeskId");
+                        .HasForeignKey("DeskId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("deskManagerApi.Models.User", "Owner")
                         .WithMany("Items")
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Brand");
 
@@ -449,7 +470,8 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Floor", "Floor")
                         .WithMany("Rooms")
-                        .HasForeignKey("FloorId");
+                        .HasForeignKey("FloorId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Floor");
                 });
@@ -458,7 +480,8 @@ namespace deskManagerApi.Migrations
                 {
                     b.HasOne("deskManagerApi.Models.Team", "Team")
                         .WithMany("Users")
-                        .HasForeignKey("TeamId");
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Team");
                 });

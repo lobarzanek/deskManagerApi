@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace deskManagerApi.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "brand",
+                name: "brands",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -19,96 +19,99 @@ namespace deskManagerApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_brand", x => x.Id);
+                    table.PrimaryKey("PK_brands", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Building",
+                name: "buildings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Building", x => x.Id);
+                    table.PrimaryKey("PK_buildings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeskStatus",
+                name: "deskStatuses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeskStatus", x => x.Id);
+                    table.PrimaryKey("PK_deskStatuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Team",
+                name: "teams",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Team", x => x.Id);
+                    table.PrimaryKey("PK_teams", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Floor",
+                name: "floors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     BuildingId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Floor", x => x.Id);
+                    table.PrimaryKey("PK_floors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Floor_Building_BuildingId",
+                        name: "FK_floors_buildings_BuildingId",
                         column: x => x.BuildingId,
-                        principalTable: "Building",
-                        principalColumn: "Id");
+                        principalTable: "buildings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Login = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     TeamId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Team_TeamId",
+                        name: "FK_users_teams_TeamId",
                         column: x => x.TeamId,
-                        principalTable: "Team",
-                        principalColumn: "Id");
+                        principalTable: "teams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Room",
+                name: "rooms",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     mapViewBox = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     mapWidth = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     mapHeight = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -117,45 +120,48 @@ namespace deskManagerApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Room", x => x.Id);
+                    table.PrimaryKey("PK_rooms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Room_Floor_FloorId",
+                        name: "FK_rooms_floors_FloorId",
                         column: x => x.FloorId,
-                        principalTable: "Floor",
-                        principalColumn: "Id");
+                        principalTable: "floors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Desk",
+                name: "desks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     MapXLocation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MapYLocation = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MapWidth = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MapHeight = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Width = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Height = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoomId = table.Column<int>(type: "int", nullable: true),
                     StatusId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Desk", x => x.Id);
+                    table.PrimaryKey("PK_desks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Desk_DeskStatus_StatusId",
+                        name: "FK_desks_deskStatuses_StatusId",
                         column: x => x.StatusId,
-                        principalTable: "DeskStatus",
-                        principalColumn: "Id");
+                        principalTable: "deskStatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Desk_Room_RoomId",
+                        name: "FK_desks_rooms_RoomId",
                         column: x => x.RoomId,
-                        principalTable: "Room",
-                        principalColumn: "Id");
+                        principalTable: "rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DesksTeams",
+                name: "deskTeams",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -165,52 +171,54 @@ namespace deskManagerApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DesksTeams", x => x.Id);
+                    table.PrimaryKey("PK_deskTeams", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DesksTeams_Desk_DeskId",
+                        name: "FK_deskTeams_desks_DeskId",
                         column: x => x.DeskId,
-                        principalTable: "Desk",
+                        principalTable: "desks",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DesksTeams_Team_TeamId",
+                        name: "FK_deskTeams_teams_TeamId",
                         column: x => x.TeamId,
-                        principalTable: "Team",
+                        principalTable: "teams",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Issue",
+                name: "issues",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     DeskId = table.Column<int>(type: "int", nullable: true),
                     ReporterId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Issue", x => x.Id);
+                    table.PrimaryKey("PK_issues", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Issue_Desk_DeskId",
+                        name: "FK_issues_desks_DeskId",
                         column: x => x.DeskId,
-                        principalTable: "Desk",
-                        principalColumn: "Id");
+                        principalTable: "desks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Issue_User_ReporterId",
+                        name: "FK_issues_users_ReporterId",
                         column: x => x.ReporterId,
-                        principalTable: "User",
-                        principalColumn: "Id");
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Item",
+                name: "items",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     AddDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -221,31 +229,33 @@ namespace deskManagerApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Item", x => x.Id);
+                    table.PrimaryKey("PK_items", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Item_brand_BrandId",
+                        name: "FK_items_brands_BrandId",
                         column: x => x.BrandId,
-                        principalTable: "brand",
-                        principalColumn: "Id");
+                        principalTable: "brands",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Item_Desk_DeskId",
+                        name: "FK_items_desks_DeskId",
                         column: x => x.DeskId,
-                        principalTable: "Desk",
-                        principalColumn: "Id");
+                        principalTable: "desks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Item_User_OwnerId",
+                        name: "FK_items_users_OwnerId",
                         column: x => x.OwnerId,
-                        principalTable: "User",
-                        principalColumn: "Id");
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "IssueHistory",
+                name: "issueHistories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChangeDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StatusFrom = table.Column<int>(type: "int", nullable: false),
                     StatusTo = table.Column<int>(type: "int", nullable: false),
@@ -254,127 +264,128 @@ namespace deskManagerApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IssueHistory", x => x.Id);
+                    table.PrimaryKey("PK_issueHistories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_IssueHistory_Issue_IssueId",
+                        name: "FK_issueHistories_issues_IssueId",
                         column: x => x.IssueId,
-                        principalTable: "Issue",
+                        principalTable: "issues",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_IssueHistory_User_ChangedBy",
+                        name: "FK_issueHistories_users_ChangedBy",
                         column: x => x.ChangedBy,
-                        principalTable: "User",
-                        principalColumn: "Id");
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Desk_RoomId",
-                table: "Desk",
+                name: "IX_desks_RoomId",
+                table: "desks",
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Desk_StatusId",
-                table: "Desk",
+                name: "IX_desks_StatusId",
+                table: "desks",
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DesksTeams_DeskId",
-                table: "DesksTeams",
+                name: "IX_deskTeams_DeskId",
+                table: "deskTeams",
                 column: "DeskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DesksTeams_TeamId",
-                table: "DesksTeams",
+                name: "IX_deskTeams_TeamId",
+                table: "deskTeams",
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Floor_BuildingId",
-                table: "Floor",
+                name: "IX_floors_BuildingId",
+                table: "floors",
                 column: "BuildingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Issue_DeskId",
-                table: "Issue",
-                column: "DeskId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Issue_ReporterId",
-                table: "Issue",
-                column: "ReporterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_IssueHistory_ChangedBy",
-                table: "IssueHistory",
+                name: "IX_issueHistories_ChangedBy",
+                table: "issueHistories",
                 column: "ChangedBy");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IssueHistory_IssueId",
-                table: "IssueHistory",
+                name: "IX_issueHistories_IssueId",
+                table: "issueHistories",
                 column: "IssueId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Item_BrandId",
-                table: "Item",
-                column: "BrandId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Item_DeskId",
-                table: "Item",
+                name: "IX_issues_DeskId",
+                table: "issues",
                 column: "DeskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Item_OwnerId",
-                table: "Item",
+                name: "IX_issues_ReporterId",
+                table: "issues",
+                column: "ReporterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_items_BrandId",
+                table: "items",
+                column: "BrandId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_items_DeskId",
+                table: "items",
+                column: "DeskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_items_OwnerId",
+                table: "items",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Room_FloorId",
-                table: "Room",
+                name: "IX_rooms_FloorId",
+                table: "rooms",
                 column: "FloorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_TeamId",
-                table: "User",
+                name: "IX_users_TeamId",
+                table: "users",
                 column: "TeamId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DesksTeams");
+                name: "deskTeams");
 
             migrationBuilder.DropTable(
-                name: "IssueHistory");
+                name: "issueHistories");
 
             migrationBuilder.DropTable(
-                name: "Item");
+                name: "items");
 
             migrationBuilder.DropTable(
-                name: "Issue");
+                name: "issues");
 
             migrationBuilder.DropTable(
-                name: "brand");
+                name: "brands");
 
             migrationBuilder.DropTable(
-                name: "Desk");
+                name: "desks");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "users");
 
             migrationBuilder.DropTable(
-                name: "DeskStatus");
+                name: "deskStatuses");
 
             migrationBuilder.DropTable(
-                name: "Room");
+                name: "rooms");
 
             migrationBuilder.DropTable(
-                name: "Team");
+                name: "teams");
 
             migrationBuilder.DropTable(
-                name: "Floor");
+                name: "floors");
 
             migrationBuilder.DropTable(
-                name: "Building");
+                name: "buildings");
         }
     }
 }
