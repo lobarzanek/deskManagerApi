@@ -35,13 +35,13 @@ namespace deskManagerApi.Entities.DTO.Update
         /// Gets or sets the value of desk ID.
         /// </summary>
         [ForeignKey("Desk")]
-        public int? DeskId { get; set; }
+        public int DeskId { get; set; }
 
         /// <summary>
         /// Gets or sets the value of user ID who reports the issue.
         /// </summary>
         [ForeignKey("Reporter")]
-        public int? ReporterId { get; set; }
+        public int ReporterId { get; set; }
 
         #endregion
     }
