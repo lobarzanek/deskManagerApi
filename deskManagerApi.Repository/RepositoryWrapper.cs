@@ -28,6 +28,7 @@ namespace deskManagerApi.Repository
         private IRoomRepository _room; 
         private ITeamRepository _team;
         private IUserRepository _user;
+        private IDeskStatusRepository _deskStatus;
 
         #endregion
 
@@ -132,6 +133,17 @@ namespace deskManagerApi.Repository
                     _user = new UserRepository(_context);
                 }
                 return _user;
+            }
+        }
+        public IDeskStatusRepository DeskStatus
+        {
+            get
+            {
+                if (_deskStatus == null)
+                {
+                    _deskStatus = new DeskStatusRepository(_context);
+                }
+                return _deskStatus;
             }
         }
 
