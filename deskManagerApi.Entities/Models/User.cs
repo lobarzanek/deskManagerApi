@@ -36,6 +36,13 @@ namespace deskManagerApi.Models
         public string Login { get; set; }
 
         /// <summary>
+        /// Gets or sets the password value of user.
+        /// </summary>
+        [Required(ErrorMessage = "Password is required")]
+        [StringLength(20, ErrorMessage = "Password can't be longer than 20 characters")]
+        public string Password { get; set; }
+
+        /// <summary>
         /// Gets or sets the role value of user.
         /// </summary>
         public Role RoleId { get; set; }
