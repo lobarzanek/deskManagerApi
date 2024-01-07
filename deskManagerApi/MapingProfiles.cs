@@ -26,6 +26,7 @@ namespace deskManagerApi.Helpers
             CreateMap<Brand, GetBrandDto>();
             CreateMap<Building, GetBuildingDto>();
             CreateMap<Desk, GetDeskDto>();
+            CreateMap<Desk, GetDeskBasicInfo>();
             CreateMap<DeskStatus, GetDeskStatusDto>();
             CreateMap<Floor, GetFloorDto>();
             CreateMap<Issue, GetIssueDto>();
