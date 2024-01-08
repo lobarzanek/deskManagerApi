@@ -60,7 +60,7 @@ namespace deskManagerApi.Controllers
         /// </remarks>
         /// <response code="200">If Floor ID is valid</response>
         /// <response code="500">If an internal server error occurred.</response>
-        [HttpGet]
+        [HttpGet(Name = "GetAllFloors")]
         [ProducesResponseType((200), Type = typeof(IEnumerable<GetFloorDto>))]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllFloors()
@@ -70,6 +70,40 @@ namespace deskManagerApi.Controllers
                 var _floors = await _repositoryWrapper.Floor.GetAllFloors();
 
                 var _floorsMap = _mapper.Map<IEnumerable<GetFloorDto>>(_floors);
+
+                _floorsMap = await AddNamesToDtoIdArray(_floorsMap);
+
+                return Ok(_floorsMap);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a list of all Floors with basic info.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /floor/basic
+        ///
+        /// </remarks>
+        /// <response code="200">If Floor ID is valid</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic", Name = "GetAllFloorsBasicInfo")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetFloorBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllFloorsBasicInfo()
+        {
+            try
+            {
+                var _floors = await _repositoryWrapper.Floor.GetAllFloors();
+
+                var _floorsMap = _mapper.Map<IEnumerable<GetFloorBasicInfo>>(_floors);
 
                 return Ok(_floorsMap);
             }
@@ -173,6 +207,9 @@ namespace deskManagerApi.Controllers
 
                 var _createdFloor = _mapper.Map<GetFloorDto>(_floorEntity);
 
+                _createdFloor = await AddNamesToDtoId(_createdFloor);
+
+
                 return CreatedAtRoute("GetFloorById", new { id = _createdFloor.Id }, _createdFloor);
             }
             catch (Exception ex)
@@ -245,6 +282,8 @@ namespace deskManagerApi.Controllers
 
                 var _updatedFloor = _mapper.Map<GetFloorDto>(_floorEntity);
 
+                _updatedFloor = await AddNamesToDtoId(_updatedFloor);
+
                 return Ok(_updatedFloor);
             }
             catch (Exception ex)
@@ -301,6 +340,36 @@ namespace deskManagerApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task<GetFloorDto> AddNamesToDtoId(GetFloorDto floorMap)
+        {
+            if (floorMap.BuildingId != null)
+            {
+                var building = await _repositoryWrapper.Building.GetBuildingById((int)floorMap.BuildingId);
+                floorMap.BuildingName = building.Name;
+            }
+
+            return floorMap;
+        }
+
+        private async Task<IEnumerable<GetFloorDto>> AddNamesToDtoIdArray(IEnumerable<GetFloorDto> floorsMap)
+        {
+            var buildings = await _repositoryWrapper.Building.GetAllBuildings();
+
+            foreach (var floor in floorsMap)
+            {
+                if (floor.BuildingId != null)
+                {
+                    floor.BuildingName = buildings.FirstOrDefault(b => b.Id == floor.BuildingId).Name;
+                }
+            }
+
+            return floorsMap;
         }
 
         #endregion

@@ -29,6 +29,7 @@ namespace deskManagerApi.Helpers
             CreateMap<Desk, GetDeskBasicInfo>();
             CreateMap<DeskStatus, GetDeskStatusDto>();
             CreateMap<Floor, GetFloorDto>();
+            CreateMap<Floor, GetFloorBasicInfo>();
             CreateMap<Issue, GetIssueDto>();
             CreateMap<Item, GetItemDto>();
             CreateMap<Room, GetRoomDto>();
