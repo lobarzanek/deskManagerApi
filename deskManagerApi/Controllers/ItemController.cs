@@ -67,6 +67,8 @@ namespace deskManagerApi.Controllers
 
                 var _itemsMap = _mapper.Map<IEnumerable<GetItemDto>>(_items);
 
+                _itemsMap = await AddNamesToDtoIdArray(_itemsMap);
+
                 return Ok(_itemsMap);
             }
             catch (Exception ex)
@@ -106,6 +108,8 @@ namespace deskManagerApi.Controllers
                 }
 
                 var _itemMap = _mapper.Map<GetItemDto>(_item);
+
+                _itemMap = await AddNamesToDtoId(_itemMap);
 
                 return Ok(_itemMap);
             }
@@ -160,7 +164,7 @@ namespace deskManagerApi.Controllers
 
                 if(item.OwnerId != null)
                 {
-                    var _owner = _repositoryWrapper.User.GetUserById((int)item.OwnerId);
+                    var _owner = await _repositoryWrapper.User.GetUserById((int)item.OwnerId);
                     if (_owner is null)
                     {
                         return BadRequest("Invalid owner ID");
@@ -169,7 +173,7 @@ namespace deskManagerApi.Controllers
 
                 if (item.BrandId != null)
                 {
-                    var _brand = _repositoryWrapper.Brand.GetBrandById((int)item.BrandId);
+                    var _brand = await _repositoryWrapper.Brand.GetBrandById((int)item.BrandId);
                     if (_brand is null)
                     {
                         return BadRequest("Invalid brand ID");
@@ -178,7 +182,7 @@ namespace deskManagerApi.Controllers
 
                 if (item.DeskId != null)
                 {
-                    var _desk = _repositoryWrapper.Desk.GetDeskById((int)item.DeskId);
+                    var _desk = await _repositoryWrapper.Desk.GetDeskById((int)item.DeskId);
                     if (_desk is null)
                     {
                         return BadRequest("Invalid desk ID");
@@ -191,6 +195,8 @@ namespace deskManagerApi.Controllers
                 await _repositoryWrapper.Save();
 
                 var _createdItem = _mapper.Map<GetItemDto>(_itemEntity);
+
+                _createdItem = await AddNamesToDtoId(_createdItem);
 
                 return CreatedAtRoute("GetItemById", new { id = _createdItem.Id }, _createdItem);
             }
@@ -286,6 +292,8 @@ namespace deskManagerApi.Controllers
 
                 var _updatedItem = _mapper.Map<GetItemDto>(_itemEntity);
 
+                _updatedItem = await AddNamesToDtoId(_updatedItem);
+
                 return Ok(_updatedItem);
             }
             catch (Exception ex)
@@ -342,6 +350,64 @@ namespace deskManagerApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task<GetItemDto> AddNamesToDtoId(GetItemDto itemMap)
+        {
+            if (itemMap.OwnerId != null)
+            {
+                var owner = await _repositoryWrapper.User.GetUserById((int)itemMap.OwnerId);
+                itemMap.OwnerName = $"{owner.FirstName} {owner.LastName}";
+            }
+
+            if (itemMap.BrandId != null)
+            {
+                var brand = await _repositoryWrapper.Brand.GetBrandById((int)itemMap.BrandId);
+                itemMap.BrandName = brand.Name;
+            }
+
+            if (itemMap.DeskId != null)
+            {
+                var desk = await _repositoryWrapper.Desk.GetDeskById((int)itemMap.DeskId);
+                itemMap.DeskName = desk.Name;
+            }
+
+            return itemMap;
+        }
+
+        private async Task<IEnumerable<GetItemDto>> AddNamesToDtoIdArray(IEnumerable<GetItemDto> itemsMap)
+        {
+            var owners = await _repositoryWrapper.User.GetAllUsers();
+            var brands = await _repositoryWrapper.Brand.GetAllBrands();
+            var desks = await _repositoryWrapper.Desk.GetAllDesks();
+
+            foreach (var item in itemsMap)
+            {
+                if (item.OwnerId != null)
+                {
+                    var owner = owners.FirstOrDefault(o => o.Id == item.OwnerId);
+                    if (owner != null)
+                    {
+                        item.OwnerName = $"{owner.FirstName} {owner.LastName}";
+                    }
+                }
+
+                if (item.BrandId != null)
+                {
+                    item.BrandName = brands.FirstOrDefault(b => b.Id == item.BrandId).Name;
+                }
+
+                if (item.DeskId != null)
+                {
+                    item.DeskName = desks.FirstOrDefault(s => s.Id == item.DeskId).Name;
+                }
+            }
+
+            return itemsMap;
         }
 
         #endregion

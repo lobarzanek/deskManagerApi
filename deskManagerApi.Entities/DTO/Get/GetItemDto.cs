@@ -16,14 +16,11 @@ namespace deskManagerApi.Entities.DTO.Get
         /// <summary>
         /// Gets or sets the ID value of item.
         /// </summary>
-        [Key]
         public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name value of item.
         /// </summary>
-        [Required(ErrorMessage = "Name is required")]
-        [StringLength(60, ErrorMessage = "Name can't be longer than 60 characters")]
         public string Name { get; set; }
 
         /// <summary>
@@ -49,20 +46,32 @@ namespace deskManagerApi.Entities.DTO.Get
         /// <summary>
         /// Gets or sets the value of owner ID.
         /// </summary>
-        [ForeignKey("Owner")]
         public int? OwnerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name value of Owner.
+        /// </summary>
+        public string? OwnerName { get; set; }
 
         /// <summary>
         /// Gets or sets the value of brand ID.
         /// </summary>
-        [ForeignKey("Brand")]
         public int? BrandId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name value of Brand.
+        /// </summary>
+        public string? BrandName { get; set; }
 
         /// <summary>
         /// Gets or sets the value of desk ID.
         /// </summary>
-        [ForeignKey("Desk")]
         public int? DeskId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name value of Desk.
+        /// </summary>
+        public string? DeskName { get; set; }
 
         #endregion
     }
