@@ -60,7 +60,7 @@ namespace deskManagerApi.Controllers
         /// </remarks>
         /// <response code="200">If Room ID is valid</response>
         /// <response code="500">If an internal server error occurred.</response>
-        [HttpGet]
+        [HttpGet(Name = "GetAllRooms")]
         [ProducesResponseType((200), Type = typeof(IEnumerable<GetRoomDto>))]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllRooms()
@@ -71,7 +71,43 @@ namespace deskManagerApi.Controllers
 
                 var _roomsMap = _mapper.Map<IEnumerable<GetRoomDto>>(_rooms);
 
+                _roomsMap = await AddNamesToDtoIdArray(_roomsMap);
+
                 return Ok(_roomsMap);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a list of all Rooms with basic info.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /room/basic
+        ///
+        /// </remarks>
+        /// <response code="200">If Room ID is valid</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic", Name = "GetAllRoomsBasicInfo")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetRoomBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllRoomsBasicInfo()
+        {
+            try
+            {
+                var _rooms = await _repositoryWrapper.Room.GetAllRooms();
+
+                var _roomsMap = _mapper.Map<IEnumerable<GetRoomBasicInfo>>(_rooms);
+
+                return Ok(_roomsMap);
+
             }
             catch (Exception ex)
             {
@@ -110,6 +146,8 @@ namespace deskManagerApi.Controllers
                 }
 
                 var _roomMap = _mapper.Map<GetRoomDto>(_room);
+
+                _roomMap = await AddNamesToDtoId(_roomMap);
 
                 return Ok(_roomMap);
             }
@@ -172,6 +210,8 @@ namespace deskManagerApi.Controllers
                 await  _repositoryWrapper.Save();
 
                 var _createdRoom = _mapper.Map<GetRoomDto>(_roomEntity);
+
+                _createdRoom = await AddNamesToDtoId(_createdRoom);
 
                 return CreatedAtRoute("GetRoomById", new { id = _createdRoom.Id }, _createdRoom);
             }
@@ -245,6 +285,8 @@ namespace deskManagerApi.Controllers
 
                 var _updatedRoom = _mapper.Map<GetRoomDto>(_roomEntity);
 
+                _updatedRoom = await AddNamesToDtoId(_updatedRoom);
+
                 return Ok(_updatedRoom);
             }
             catch (Exception ex)
@@ -293,7 +335,6 @@ namespace deskManagerApi.Controllers
                 _repositoryWrapper.Room.DeleteRoom(_roomEntity);
                 await _repositoryWrapper.Save();
 
-
                 return NoContent();
             }
             catch (Exception ex)
@@ -301,6 +342,36 @@ namespace deskManagerApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task<GetRoomDto> AddNamesToDtoId(GetRoomDto roomMap)
+        {
+            if (roomMap.FloorId != null)
+            {
+                var floor = await _repositoryWrapper.Floor.GetFloorById((int)roomMap.FloorId);
+                roomMap.FloorName = floor.Name;
+            }
+
+            return roomMap;
+        }
+
+        private async Task<IEnumerable<GetRoomDto>> AddNamesToDtoIdArray(IEnumerable<GetRoomDto> roomsMap)
+        {
+            var floors = await _repositoryWrapper.Floor.GetAllFloors();
+
+            foreach (var room in roomsMap)
+            {
+                if (room.FloorId != null)
+                {
+                    room.FloorName = floors.FirstOrDefault(f => f.Id == room.FloorId).Name;
+                }
+            }
+
+            return roomsMap;
         }
 
         #endregion

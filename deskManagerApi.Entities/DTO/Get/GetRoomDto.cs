@@ -16,14 +16,11 @@ namespace deskManagerApi.Entities.DTO.Get
         /// <summary>
         /// Gets or sets the ID value of room.
         /// </summary>
-        [Key]
         public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name value of room.
         /// </summary>
-        [Required(ErrorMessage = "Name is required")]
-        [StringLength(60, ErrorMessage = "Name can't be longer than 60 characters")]
         public string Name { get; set; }
 
         /// <summary>
@@ -49,8 +46,12 @@ namespace deskManagerApi.Entities.DTO.Get
         /// <summary>
         /// Gets or sets the value of floor ID.
         /// </summary>
-        [ForeignKey("Floor")]
         public int? FloorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of floor name.
+        /// </summary>
+        public string? FloorName { get; set; }
 
         #endregion
     }

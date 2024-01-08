@@ -33,6 +33,7 @@ namespace deskManagerApi.Helpers
             CreateMap<Issue, GetIssueDto>();
             CreateMap<Item, GetItemDto>();
             CreateMap<Room, GetRoomDto>();
+            CreateMap<Room, GetRoomBasicInfo>();
             CreateMap<Team, GetTeamDto>();
             CreateMap<User, GetUserDto>();
 
