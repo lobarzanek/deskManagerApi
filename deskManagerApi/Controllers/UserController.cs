@@ -67,6 +67,40 @@ namespace deskManagerApi.Controllers
 
                 var _usersMap = _mapper.Map<IEnumerable<GetUserDto>>(_users);
 
+                _usersMap = await AddNamesToDtoIdArray(_usersMap);
+
+                return Ok(_usersMap);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a list of all Users with basic info.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /user
+        ///
+        /// </remarks>
+        /// <response code="200">If User ID is valid</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic", Name = "GetAllUsersBasicInfo")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetUserBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllUsersBasicInfo()
+        {
+            try
+            {
+                var _users = await _repositoryWrapper.User.GetAllUsers();
+
+                var _usersMap = _mapper.Map<IEnumerable<GetUserBasicInfo>>(_users);
+
                 return Ok(_usersMap);
             }
             catch (Exception ex)
@@ -106,6 +140,8 @@ namespace deskManagerApi.Controllers
                 }
 
                 var _userMap = _mapper.Map<GetUserDto>(_user);
+
+                _userMap = await AddNamesToDtoId(_userMap);
 
                 return Ok(_userMap);
             }
@@ -172,6 +208,8 @@ namespace deskManagerApi.Controllers
                 await _repositoryWrapper.Save();
 
                 var _createdUser = _mapper.Map<GetUserDto>(_userEntity);
+
+                _createdUser = await AddNamesToDtoId(_createdUser);
 
                 return CreatedAtRoute("GetUserById", new { id = _createdUser.Id }, _createdUser);
             }
@@ -247,6 +285,8 @@ namespace deskManagerApi.Controllers
 
                 var _updatedUser = _mapper.Map<GetUserDto>(_userEntity);
 
+                _updatedUser = await AddNamesToDtoId(_updatedUser);
+
                 return Ok(_updatedUser);
             }
             catch (Exception ex)
@@ -303,6 +343,36 @@ namespace deskManagerApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task<GetUserDto> AddNamesToDtoId(GetUserDto userMap)
+        {
+            if (userMap.TeamId != null)
+            {
+                var team = await _repositoryWrapper.Team.GetTeamById((int)userMap.TeamId);
+                userMap.TeamName = team.Name;
+            }
+
+            return userMap;
+        }
+
+        private async Task<IEnumerable<GetUserDto>> AddNamesToDtoIdArray(IEnumerable<GetUserDto> usersMap)
+        {
+            var teams = await _repositoryWrapper.Team.GetAllTeams();
+
+            foreach (var user in usersMap)
+            {
+                if (user.TeamId != null)
+                {
+                    user.TeamName = teams.FirstOrDefault(u => u.Id == user.TeamId).Name;
+                }
+            }
+
+            return usersMap;
         }
 
         #endregion

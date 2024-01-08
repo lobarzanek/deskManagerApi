@@ -36,6 +36,7 @@ namespace deskManagerApi.Helpers
             CreateMap<Room, GetRoomBasicInfo>();
             CreateMap<Team, GetTeamDto>();
             CreateMap<User, GetUserDto>();
+            CreateMap<User, GetUserBasicInfo>().ForMember(d => d.Name, conf => conf.MapFrom(u => $"{u.FirstName} {u.LastName}"));
 
             // Create DTO to Model
             CreateMap<CreateBrandDto, Brand>();

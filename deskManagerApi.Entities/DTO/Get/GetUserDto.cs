@@ -22,34 +22,32 @@ namespace deskManagerApi.Entities.DTO.Get
         /// <summary>
         /// Gets or sets the firstname value of user.
         /// </summary>
-        [Required(ErrorMessage = "Firstname is required")]
-        [StringLength(20, ErrorMessage = "Firstname can't be longer than 20 characters")]
         public string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the lastname value of user.
         /// </summary>
-        [Required(ErrorMessage = "Lastname is required")]
-        [StringLength(20, ErrorMessage = "Lastname can't be longer than 20 characters")]
         public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the login value of user.
         /// </summary>
-        [Required(ErrorMessage = "Login is required")]
-        [StringLength(20, ErrorMessage = "Login can't be longer than 20 characters")]
         public string Login { get; set; }
 
         /// <summary>
         /// Gets or sets the role value of user.
         /// </summary>
-        public Role RoleId { get; set; }
+        public Role Role { get; set; }
 
         /// <summary>
         /// Gets or sets the value of team ID.
         /// </summary>
-        [ForeignKey("Team")]
         public int? TeamId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of team name.
+        /// </summary>
+        public string? TeamName { get; set; }
 
         #endregion
     }
