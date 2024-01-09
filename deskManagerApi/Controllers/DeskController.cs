@@ -381,7 +381,7 @@ namespace deskManagerApi.Controllers
             if (deskMap.StatusId != null)
             {
                 var status = await _repositoryWrapper.DeskStatus.GetDeskStatusById((int)deskMap.StatusId);
-                deskMap.RoomName = status.Name;
+                deskMap.StatusName = status.Name;
             }
 
             return deskMap;

@@ -145,6 +145,8 @@ namespace deskManagerApi.Controllers
 
                 var _floorMap = _mapper.Map<GetFloorDto>(_floor);
 
+                _floorMap = await AddNamesToDtoId( _floorMap );
+
                 return Ok(_floorMap);
             }
             catch (Exception ex)
