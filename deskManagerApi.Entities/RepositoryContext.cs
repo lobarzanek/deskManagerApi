@@ -1,4 +1,5 @@
-﻿using deskManagerApi.Models;
+﻿using deskManagerApi.Entities.Models;
+using deskManagerApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace deskManagerApi.Entities
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -101,6 +103,26 @@ namespace deskManagerApi.Entities
                 .HasOne(e => e.Team)
                 .WithMany(e => e.Users)
                 .HasForeignKey(e => e.TeamId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            //User
+            modelBuilder.Entity<User>()
+                .HasOne(e => e.Team)
+                .WithMany(e => e.Users)
+                .HasForeignKey(e => e.TeamId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            //Reservation
+            modelBuilder.Entity<Reservation>()
+                .HasOne(e => e.User)
+                .WithMany(e => e.Reservations)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(e => e.Desk)
+                .WithMany(e => e.Reservations)
+                .HasForeignKey(e => e.DeskId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
 
