@@ -265,7 +265,7 @@ namespace deskManagerApi.Controllers
 
                 if (user.TeamId != null)
                 {
-                    var _team = _repositoryWrapper.Team.GetTeamById((int)user.TeamId);
+                    var _team = await _repositoryWrapper.Team.GetTeamById((int)user.TeamId);
                     if (_team is null)
                     {
                         return BadRequest("Invalid team ID");
