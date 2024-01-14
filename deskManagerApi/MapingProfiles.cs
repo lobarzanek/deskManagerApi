@@ -4,6 +4,7 @@ using AutoMapper;
 using deskManagerApi.Entities.DTO.Create;
 using deskManagerApi.Entities.DTO.Get;
 using deskManagerApi.Entities.DTO.Update;
+using deskManagerApi.Entities.Models;
 using deskManagerApi.Models;
 
 #endregion
@@ -49,6 +50,7 @@ namespace deskManagerApi.Helpers
             CreateMap<CreateRoomDto, Room>();
             CreateMap<CreateTeamDto, Team>();
             CreateMap<CreateUserDto, User>();
+            CreateMap<CreateReservationDto, Reservation>();
 
             // Update DTO to Model
             CreateMap<UpdateBrandDto, Brand>();

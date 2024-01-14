@@ -148,7 +148,7 @@ namespace deskManagerApi.Repository
             }
         }
 
-        public IDeskStatusRepository Reservation
+        public IReservationRepository Reservation
         {
             get
             {

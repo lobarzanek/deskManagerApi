@@ -39,9 +39,14 @@ namespace deskManagerApi.Entities.DTO.Get
         public string? RoomName { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of Room Name.
+        /// Gets or sets the value of Floor Name.
         /// </summary>
         public string? FloorName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of Building Name.
+        /// </summary>
+        public string? BuildingName { get; set; }
 
         #endregion
     }

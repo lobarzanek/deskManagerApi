@@ -11,6 +11,7 @@ namespace deskManagerApi.Contracts.IRepositoryModels
     public interface IReservationRepository : IRepositoryBase<Reservation>
     {
         Task<IEnumerable<Reservation>> GetAllReservations();
+        Task<IEnumerable<Reservation>> GetReservationsByUserId(int id);
         Task<Reservation> GetReservationById(int id);
         Task CreateReservation(Reservation reservation);
         void UpdateReservation(Reservation reservation);

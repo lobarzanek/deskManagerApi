@@ -22,6 +22,32 @@ namespace deskManagerApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("deskManagerApi.Entities.Models.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DeskId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeskId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("reservations");
+                });
+
             modelBuilder.Entity("deskManagerApi.Models.Brand", b =>
                 {
                     b.Property<int>("Id")
@@ -365,6 +391,23 @@ namespace deskManagerApi.Migrations
                     b.ToTable("users");
                 });
 
+            modelBuilder.Entity("deskManagerApi.Entities.Models.Reservation", b =>
+                {
+                    b.HasOne("deskManagerApi.Models.Desk", "Desk")
+                        .WithMany("Reservations")
+                        .HasForeignKey("DeskId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("deskManagerApi.Models.User", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Desk");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("deskManagerApi.Models.Desk", b =>
                 {
                     b.HasOne("deskManagerApi.Models.Room", "Room")
@@ -501,6 +544,8 @@ namespace deskManagerApi.Migrations
                     b.Navigation("Issues");
 
                     b.Navigation("Items");
+
+                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("deskManagerApi.Models.DeskStatus", b =>
@@ -537,6 +582,8 @@ namespace deskManagerApi.Migrations
                     b.Navigation("Issues");
 
                     b.Navigation("Items");
+
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }
