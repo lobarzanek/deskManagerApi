@@ -215,6 +215,13 @@ namespace deskManagerApi.Controllers
                     return BadRequest("Desk is claimed for provided Date");
                 }
 
+                var desk = await _repositoryWrapper.Desk.GetDeskById(reservation.DeskId);
+
+                if(desk is null || desk.Status == DeskStatus.Broken)
+                {
+                    return BadRequest("Cannot make reservation for provided desk");
+                }
+
                 var _reservationEntity = _mapper.Map<Reservation>(reservation);
 
                 await _repositoryWrapper.Reservation.CreateReservation(_reservationEntity);

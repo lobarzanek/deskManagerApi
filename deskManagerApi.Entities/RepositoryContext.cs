@@ -19,7 +19,6 @@ namespace deskManagerApi.Entities
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Desk> Desks { get; set; }
-        public DbSet<DeskStatus> DeskStatuses { get; set; }
         public DbSet<DesksTeams> DesksTeams { get; set; }
         public DbSet<Floor> Floors { get; set; }
         public DbSet<Issue> Issues { get; set; }
@@ -37,12 +36,6 @@ namespace deskManagerApi.Entities
                 .HasOne(e => e.Room)
                 .WithMany(e => e.Desks)
                 .HasForeignKey(e => e.RoomId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Desk>()
-                .HasOne(e => e.Status)
-                .WithMany(e => e.Desks)
-                .HasForeignKey(e => e.StatusId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             //Floor

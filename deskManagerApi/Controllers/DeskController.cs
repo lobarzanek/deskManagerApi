@@ -168,8 +168,7 @@ namespace deskManagerApi.Controllers
         ///        "mapYLocation": "10",
         ///        "width": "80",
         ///        "height": "30",
-        ///        "roomId": 1,
-        ///        "status": 1
+        ///        "roomId": 1
         ///     }
         ///
         /// </remarks>
@@ -200,15 +199,6 @@ namespace deskManagerApi.Controllers
                     if (_room is null)
                     {
                         return BadRequest("Invalid room ID");
-                    }
-                }
-
-                if (desk.StatusId != null)
-                {
-                    var _deskStatus = _repositoryWrapper.DeskStatus.GetDeskStatusById((int)desk.StatusId);
-                    if (_deskStatus is null)
-                    {
-                        return BadRequest("Invalid status ID");
                     }
                 }
 
@@ -247,8 +237,7 @@ namespace deskManagerApi.Controllers
         ///        "mapYLocation": "10",
         ///        "width": "80",
         ///        "height": "30",
-        ///        "roomId": 1,
-        ///        "statusId": 1
+        ///        "roomId": 1
         ///     }
         ///
         /// </remarks>
@@ -281,15 +270,6 @@ namespace deskManagerApi.Controllers
                     if (_desk is null)
                     {
                         return BadRequest("Invalid desk ID");
-                    }
-                }
-
-                if (desk.StatusId != null)
-                {
-                    var _deskStatus = await _repositoryWrapper.DeskStatus.GetDeskStatusById((int)desk.StatusId);
-                    if (_deskStatus is null)
-                    {
-                        return BadRequest("Invalid status ID");
                     }
                 }
 
@@ -378,30 +358,18 @@ namespace deskManagerApi.Controllers
                 deskMap.RoomName = room.Name;
             }
 
-            if (deskMap.StatusId != null)
-            {
-                var status = await _repositoryWrapper.DeskStatus.GetDeskStatusById((int)deskMap.StatusId);
-                deskMap.StatusName = status.Name;
-            }
-
             return deskMap;
         }
 
         private async Task<IEnumerable<GetDeskDto>> AddNamesToDtoIdArray(IEnumerable<GetDeskDto> desksMap)
         {
             var rooms = await _repositoryWrapper.Room.GetAllRooms();
-            var statuses = await _repositoryWrapper.DeskStatus.GetAllDeskStatuses();
 
             foreach(var desk in desksMap)
             {
                 if (desk.RoomId != null)
                 {
                     desk.RoomName = rooms.FirstOrDefault(r => r.Id == desk.RoomId).Name;
-                }
-
-                if (desk.StatusId != null)
-                {
-                    desk.StatusName = statuses.FirstOrDefault(s => s.Id == desk.StatusId).Name;
                 }
             }
 

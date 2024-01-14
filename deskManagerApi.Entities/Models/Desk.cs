@@ -54,15 +54,9 @@ namespace deskManagerApi.Models
         public Room? Room { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of status ID.
-        /// </summary>
-        [ForeignKey("Status")]
-        public int? StatusId;
-
-        /// <summary>
         /// Gets or sets the value of status object.
         /// </summary>
-        public DeskStatus? Status { get; set; }
+        public DeskStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of DesksTeams.

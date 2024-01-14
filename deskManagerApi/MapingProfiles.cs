@@ -28,7 +28,6 @@ namespace deskManagerApi.Helpers
             CreateMap<Building, GetBuildingDto>();
             CreateMap<Desk, GetDeskDto>();
             CreateMap<Desk, GetDeskBasicInfo>();
-            CreateMap<DeskStatus, GetDeskStatusDto>();
             CreateMap<Floor, GetFloorDto>();
             CreateMap<Floor, GetFloorBasicInfo>();
             CreateMap<Issue, GetIssueDto>();
@@ -43,7 +42,6 @@ namespace deskManagerApi.Helpers
             CreateMap<CreateBrandDto, Brand>();
             CreateMap<CreateBuildingDto, Building>();
             CreateMap<CreateDeskDto, Desk>();
-            CreateMap<CreateDeskStatusDto, DeskStatus>();
             CreateMap<CreateFloorDto, Floor>();
             CreateMap<CreateIssueDto, Issue>();
             CreateMap<CreateItemDto, Item>();
@@ -56,7 +54,6 @@ namespace deskManagerApi.Helpers
             CreateMap<UpdateBrandDto, Brand>();
             CreateMap<UpdateBuildingDto, Building>();
             CreateMap<UpdateDeskDto, Desk>();
-            CreateMap<UpdateDeskStatusDto, DeskStatus>();
             CreateMap<UpdateFloorDto, Floor>();
             CreateMap<UpdateIssueDto, Issue>();
             CreateMap<UpdateItemDto, Item>();

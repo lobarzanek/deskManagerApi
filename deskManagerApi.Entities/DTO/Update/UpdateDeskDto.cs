@@ -51,7 +51,7 @@ namespace deskManagerApi.Entities.DTO.Update
         /// <summary>
         /// Gets or sets the value of status ID.
         /// </summary>
-        public int? StatusId { get; set; }
+        public DeskStatus Status { get; set; }
 
         #endregion
     }
