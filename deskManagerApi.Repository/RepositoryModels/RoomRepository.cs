@@ -33,6 +33,11 @@ namespace deskManagerApi.Repository.RepositoryModels
             return await FindAll().OrderBy(r => r.Name).ToListAsync();
         }
 
+        public async Task<IEnumerable<Room>> GetAllRoomsByFloorId(int id)
+        {
+            return await FindAll().Where(r => r.FloorId == id).OrderBy(r => r.Name).ToListAsync();
+        }
+
         public async Task<Room> GetRoomById(int id)
         {
             return await FindByCondition(r => r.Id == id).FirstOrDefaultAsync();

@@ -117,6 +117,45 @@ namespace deskManagerApi.Controllers
         }
 
         /// <summary>
+        /// Returns a list of all Rooms with basic info
+        /// for provided Floor ID.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /Room/basic/floor/1
+        ///
+        /// </remarks>
+        /// <response code="200">If Room ID is valid</response>
+        /// <response code="404">If Floor ID is not found</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic/floor/{id}", Name = "GetAllRoomsBasicInfoForFloorId")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetRoomBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllRoomsBasicInfoForFloorId(int id)
+        {
+            try
+            {
+                if(await _repositoryWrapper.Floor.GetFloorById(id) is null)
+                {
+                    return NotFound();
+                }
+                var _rooms = await _repositoryWrapper.Room.GetAllRoomsByFloorId(id);
+
+                var _roomsMap = _mapper.Map<IEnumerable<GetRoomBasicInfo>>(_rooms);
+
+                return Ok(_roomsMap);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
         /// Returns a Room for provided ID.
         /// </summary>
         /// <param name="id">The Room ID value to get the Room object</param>

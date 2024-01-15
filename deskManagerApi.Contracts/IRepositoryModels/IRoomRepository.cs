@@ -10,6 +10,7 @@ namespace deskManagerApi.Contracts.IRepositoryModels
     public interface IRoomRepository : IRepositoryBase<Room>
     {
         Task<IEnumerable<Room>> GetAllRooms();
+        Task<IEnumerable<Room>> GetAllRoomsByFloorId(int id);
         Task<Room> GetRoomById(int id);
         Task CreateRoom(Room room);
         void UpdateRoom(Room room);
