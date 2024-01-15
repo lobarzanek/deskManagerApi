@@ -111,6 +111,45 @@ namespace deskManagerApi.Controllers
         }
 
         /// <summary>
+        /// Returns a list of all Desks with basic information
+        /// for provided room ID.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /Desk/basic/room/1
+        ///
+        /// </remarks>
+        /// <response code="200">If Desk ID is valid</response>
+        /// <response code="404">If Room ID is not found</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic/room/{id}", Name = "GetAllDesksBasicInfoByRoomId")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetDeskBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllDesksBasicInfoByRoomId(int id)
+        {
+            try
+            {
+                if(await _repositoryWrapper.Room.GetRoomById(id) == null)
+                {
+                    return NotFound();
+                }
+
+                var _desks = await _repositoryWrapper.Desk.GetAllDesksByRoomId(id);
+
+                var _desksMap = _mapper.Map<IEnumerable<GetDeskBasicInfo>>(_desks);
+
+                return Ok(_desksMap);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
         /// Returns a Desk for provided ID.
         /// </summary>
         /// <param name="id">The Desk ID value to get the Desk object</param>
