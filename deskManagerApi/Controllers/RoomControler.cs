@@ -8,6 +8,7 @@ using deskManagerApi.Entities.DTO.Update;
 using deskManagerApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 #endregion
 
@@ -146,6 +147,46 @@ namespace deskManagerApi.Controllers
                 var _roomsMap = _mapper.Map<IEnumerable<GetRoomBasicInfo>>(_rooms);
 
                 return Ok(_roomsMap);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a map of room for provided room ID
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /Room/map/1
+        ///
+        /// </remarks>
+        /// <response code="200">If Room ID is valid</response>
+        /// <response code="404">If Room ID is not found</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("map/{id}", Name = "GetRoomMap")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetRoomMapDto>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetRoomMap(int id, DateTime date)
+        {
+            try
+            {
+                var room = await _repositoryWrapper.Room.GetRoomById(id);
+
+                if (room is null)
+                {
+                    return NotFound();
+                }
+
+                var _map = _mapper.Map<GetRoomMapDto>(room);
+                _map.SvgMap.Desks = await GetDesksForSvgMap(_map, DateOnly.FromDateTime(date));
+
+                return Ok(_map);
 
             }
             catch (Exception ex)
@@ -411,6 +452,31 @@ namespace deskManagerApi.Controllers
             }
 
             return roomsMap;
+        }
+
+        private async Task<ICollection<GetDeskMapViewDto>> GetDesksForSvgMap(GetRoomMapDto map, DateOnly date)
+        {
+            var items = await _repositoryWrapper.Item.GetAllItems();
+            var roomDesks = await _repositoryWrapper.Desk.GetAllDesksByRoomId(map.Id);
+            var reservations = await _repositoryWrapper.Reservation.GetAllReservations();
+            var dateReservations = reservations.Where(r => DateOnly.FromDateTime(r.Date) == date).ToList();
+            var mappedRoomDesks = _mapper.Map<ICollection<GetDeskMapViewDto>>(roomDesks);
+
+            foreach(var desk in mappedRoomDesks)
+            {
+                desk.Mouse = items.Any(i => i.DeskId == desk.Id && i.Type == ItemType.Mouse);
+                desk.Keyboard = items.Any(i => i.DeskId == desk.Id && i.Type == ItemType.Keyboard);
+                desk.DockStation = items.Any(i => i.DeskId == desk.Id && i.Type == ItemType.DockStation);
+                desk.MonitorNumber = items.Where(i => i.DeskId == desk.Id && i.Type == ItemType.Monitor).Count();
+
+                if(desk.Status != DeskStatus.Broken.ToString())
+                {
+                    desk.Status = dateReservations.Any(r => r.DeskId == desk.Id) ?
+                        DeskStatus.Claimed.ToString() : DeskStatus.Free.ToString();
+                }
+            }
+
+            return mappedRoomDesks;
         }
 
         #endregion

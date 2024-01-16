@@ -28,12 +28,24 @@ namespace deskManagerApi.Helpers
             CreateMap<Building, GetBuildingDto>();
             CreateMap<Desk, GetDeskDto>();
             CreateMap<Desk, GetDeskBasicInfo>();
+            CreateMap<Desk, GetDeskMapViewDto>()
+                .ForMember(d => d.Status, conf => 
+                conf.MapFrom(s => s.Status.ToString()));
             CreateMap<Floor, GetFloorDto>();
             CreateMap<Floor, GetFloorBasicInfo>();
             CreateMap<Issue, GetIssueDto>();
             CreateMap<Item, GetItemDto>();
             CreateMap<Room, GetRoomDto>();
             CreateMap<Room, GetRoomBasicInfo>();
+            CreateMap<Room, GetRoomMapDto>()
+                .ForMember(r => r.SvgMap, conf =>
+                conf.MapFrom(r => new SVGMap() 
+                { 
+                    mapViewBox = r.mapViewBox, 
+                    mapHeight = r.mapHeight, 
+                    mapWidth = r.mapWidth,
+                    mapXmlns = r.mapXmlns,
+                }));
             CreateMap<Team, GetTeamDto>();
             CreateMap<User, GetUserDto>();
             CreateMap<User, GetUserBasicInfo>().ForMember(d => d.Name, conf => conf.MapFrom(u => $"{u.FirstName} {u.LastName}"));
