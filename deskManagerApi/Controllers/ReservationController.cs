@@ -210,7 +210,7 @@ namespace deskManagerApi.Controllers
 
                 var existingReservations = await _repositoryWrapper.Reservation.GetAllReservations();
 
-                if (existingReservations.Any(r => DateOnly.FromDateTime(r.Date) == DateOnly.FromDateTime(reservation.Date)))
+                if (existingReservations.Any(r => DateOnly.FromDateTime(r.Date) == DateOnly.FromDateTime(reservation.Date) && r.DeskId == reservation.DeskId))
                 {
                     return BadRequest("Desk is claimed for provided Date");
                 }

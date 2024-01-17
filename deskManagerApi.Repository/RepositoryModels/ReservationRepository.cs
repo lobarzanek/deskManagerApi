@@ -41,7 +41,7 @@ namespace deskManagerApi.Repository.RepositoryModels
 
         public async Task<IEnumerable<Reservation>> GetReservationsByUserId(int id)
         {
-            return await FindAll().Where(r => r.DeskId == id).OrderByDescending(b => b.Id).ToListAsync();
+            return await FindAll().Where(r => r.UserId == id).OrderByDescending(b => b.Id).ToListAsync();
         }
 
         public void UpdateReservation(Reservation reservation)
