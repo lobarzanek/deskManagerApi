@@ -16,8 +16,6 @@ namespace deskManagerApi.Entities.DTO.Create
         /// <summary>
         /// Gets or sets the description value of issue.
         /// </summary>
-        [Required(ErrorMessage = "Description is required")]
-        [StringLength(1024, ErrorMessage = "Description can't be longer than 1024 characters")]
         public string Description { get; set; }
 
         /// <summary>
@@ -28,13 +26,11 @@ namespace deskManagerApi.Entities.DTO.Create
         /// <summary>
         /// Gets or sets the value of desk ID.
         /// </summary>
-        [ForeignKey("Desk")]
         public int DeskId { get; set; }
 
         /// <summary>
         /// Gets or sets the value of user ID who reports the issue.
         /// </summary>
-        [ForeignKey("Reporter")]
         public int ReporterId { get; set; }
 
         #endregion
