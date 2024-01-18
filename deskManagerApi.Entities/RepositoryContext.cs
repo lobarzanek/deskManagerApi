@@ -1,4 +1,5 @@
-﻿using deskManagerApi.Models;
+﻿using deskManagerApi.Entities.Models;
+using deskManagerApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,6 @@ namespace deskManagerApi.Entities
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Building> Buildings { get; set; }
         public DbSet<Desk> Desks { get; set; }
-        public DbSet<DeskStatus> DeskStatuses { get; set; }
         public DbSet<DesksTeams> DesksTeams { get; set; }
         public DbSet<Floor> Floors { get; set; }
         public DbSet<Issue> Issues { get; set; }
@@ -27,6 +27,7 @@ namespace deskManagerApi.Entities
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,12 +36,6 @@ namespace deskManagerApi.Entities
                 .HasOne(e => e.Room)
                 .WithMany(e => e.Desks)
                 .HasForeignKey(e => e.RoomId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Desk>()
-                .HasOne(e => e.Status)
-                .WithMany(e => e.Desks)
-                .HasForeignKey(e => e.StatusId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             //Floor
@@ -101,6 +96,26 @@ namespace deskManagerApi.Entities
                 .HasOne(e => e.Team)
                 .WithMany(e => e.Users)
                 .HasForeignKey(e => e.TeamId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            //User
+            modelBuilder.Entity<User>()
+                .HasOne(e => e.Team)
+                .WithMany(e => e.Users)
+                .HasForeignKey(e => e.TeamId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            //Reservation
+            modelBuilder.Entity<Reservation>()
+                .HasOne(e => e.User)
+                .WithMany(e => e.Reservations)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(e => e.Desk)
+                .WithMany(e => e.Reservations)
+                .HasForeignKey(e => e.DeskId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
 

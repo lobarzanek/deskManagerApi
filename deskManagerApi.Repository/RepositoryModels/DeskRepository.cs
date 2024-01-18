@@ -32,6 +32,11 @@ namespace deskManagerApi.Repository.RepositoryModels
         {
             return await FindAll().OrderBy(d => d.Name).ToListAsync();
         }
+        
+        public async Task<IEnumerable<Desk>> GetAllDesksByRoomId(int id)
+        {
+            return await FindAll().Where(d => d.RoomId == id).OrderBy(d => d.Name).ToListAsync();
+        }
 
         public async Task<Desk> GetDeskById(int id)
         {

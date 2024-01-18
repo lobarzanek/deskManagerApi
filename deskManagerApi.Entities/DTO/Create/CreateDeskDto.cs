@@ -16,8 +16,6 @@ namespace deskManagerApi.Entities.DTO.Create
         /// <summary>
         /// Gets or sets the name value of desk.
         /// </summary>
-        [Required(ErrorMessage = "Name is required")]
-        [StringLength(60, ErrorMessage = "Name can't be longer than 60 characters")]
         public string Name { get; set; }
 
         /// <summary>
@@ -43,14 +41,7 @@ namespace deskManagerApi.Entities.DTO.Create
         /// <summary>
         /// Gets or sets the value of room ID.
         /// </summary>
-        [ForeignKey("Room")]
-        public int? RoomId;
-
-        /// <summary>
-        /// Gets or sets the value of status ID.
-        /// </summary>
-        [ForeignKey("Status")]
-        public int? StatusId;
+        public int? RoomId { get; set; }
 
         #endregion
     }

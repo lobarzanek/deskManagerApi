@@ -19,7 +19,7 @@ namespace deskManagerApi.Contracts
         IRoomRepository Room { get; }
         ITeamRepository Team { get; }
         IUserRepository User { get; }
-        IDeskStatusRepository DeskStatus { get; }
+        IReservationRepository Reservation { get; }
         Task Save();
     }
 }

@@ -9,45 +9,44 @@ using System.Threading.Tasks;
 
 namespace deskManagerApi.Entities.DTO.Get
 {
-    public class GetUserDto
+    public class GetReservationDto
     {
         #region Properties and indexers
 
         /// <summary>
-        /// Gets or sets the ID value of user.
+        /// Gets or sets the ID value of Reservation.
         /// </summary>
-        [Key]
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the firstname value of user.
+        /// Gets or sets the date value of reservation.
         /// </summary>
-        public string FirstName { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
-        /// Gets or sets the lastname value of user.
+        /// Gets or sets the value of User Name.
         /// </summary>
-        public string LastName { get; set; }
+        public string? UserName { get; set; }
 
         /// <summary>
-        /// Gets or sets the login value of user.
+        /// Gets or sets the value of Desk Name.
         /// </summary>
-        public string Login { get; set; }
+        public string? DeskName { get; set; }
 
         /// <summary>
-        /// Gets or sets the role value of user.
+        /// Gets or sets the value of Room Name.
         /// </summary>
-        public Role Role { get; set; }
+        public string? RoomName { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of team ID.
+        /// Gets or sets the value of Floor Name.
         /// </summary>
-        public int? TeamId { get; set; }
+        public string? FloorName { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of team name.
+        /// Gets or sets the value of Building Name.
         /// </summary>
-        public string? TeamName { get; set; }
+        public string? BuildingName { get; set; }
 
         #endregion
     }

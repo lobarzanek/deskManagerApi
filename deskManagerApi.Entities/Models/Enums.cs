@@ -18,6 +18,7 @@
         Mouse = 1,
         Keyboard = 2,
         Monitor = 3,
+        DockStation = 4,
     }
 
     /// <summary>
@@ -42,5 +43,15 @@
         InProgress = 3,
         Blocked = 4,
         Done = 5
+    }
+
+    /// <summary>
+    /// Value of the desk status.
+    /// </summary>
+    public enum DeskStatus
+    {
+        Free = 0,
+        Claimed = 1,
+        Broken = 2,
     }
 }

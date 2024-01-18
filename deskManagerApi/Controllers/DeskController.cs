@@ -42,7 +42,7 @@ namespace deskManagerApi.Controllers
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Returns a list of all Desks.
@@ -56,7 +56,7 @@ namespace deskManagerApi.Controllers
         /// </remarks>
         /// <response code="200">If Desk ID is valid</response>
         /// <response code="500">If an internal server error occurred.</response>
-        [HttpGet]
+        [HttpGet(Name = "GetAllDesks")]
         [ProducesResponseType((200), Type = typeof(IEnumerable<GetDeskDto>))]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllDesks()
@@ -66,6 +66,79 @@ namespace deskManagerApi.Controllers
                 var _desks = await _repositoryWrapper.Desk.GetAllDesks();
 
                 var _desksMap = _mapper.Map<IEnumerable<GetDeskDto>>(_desks);
+
+                _desksMap = await AddNamesToDtoIdArray(_desksMap);
+
+                return Ok(_desksMap);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a list of all Desks with basic information.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /desk/basic
+        ///
+        /// </remarks>
+        /// <response code="200">If Desk ID is valid</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic", Name = "GetAllDesksBasicInfo")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetDeskBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllDesksBasicInfo()
+        {
+            try
+            {
+                var _desks = await _repositoryWrapper.Desk.GetAllDesks();
+
+                var _desksMap = _mapper.Map<IEnumerable<GetDeskBasicInfo>>(_desks);
+
+                return Ok(_desksMap);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a list of all Desks with basic information
+        /// for provided room ID.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /Desk/basic/room/1
+        ///
+        /// </remarks>
+        /// <response code="200">If Desk ID is valid</response>
+        /// <response code="404">If Room ID is not found</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic/room/{id}", Name = "GetAllDesksBasicInfoByRoomId")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetDeskBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllDesksBasicInfoByRoomId(int id)
+        {
+            try
+            {
+                if(await _repositoryWrapper.Room.GetRoomById(id) == null)
+                {
+                    return NotFound();
+                }
+
+                var _desks = await _repositoryWrapper.Desk.GetAllDesksByRoomId(id);
+
+                var _desksMap = _mapper.Map<IEnumerable<GetDeskBasicInfo>>(_desks);
 
                 return Ok(_desksMap);
             }
@@ -107,6 +180,8 @@ namespace deskManagerApi.Controllers
 
                 var _deskMap = _mapper.Map<GetDeskDto>(_desk);
 
+                _deskMap = await AddNamesToDtoId(_deskMap);
+
                 return Ok(_deskMap);
             }
             catch (Exception ex)
@@ -132,8 +207,7 @@ namespace deskManagerApi.Controllers
         ///        "mapYLocation": "10",
         ///        "width": "80",
         ///        "height": "30",
-        ///        "roomId": 1,
-        ///        "status": 1
+        ///        "roomId": 1
         ///     }
         ///
         /// </remarks>
@@ -160,19 +234,10 @@ namespace deskManagerApi.Controllers
 
                 if (desk.RoomId != null)
                 {
-                    var _desk = _repositoryWrapper.Room.GetRoomById((int)desk.RoomId);
-                    if (_desk is null)
+                    var _room = _repositoryWrapper.Room.GetRoomById((int)desk.RoomId);
+                    if (_room is null)
                     {
-                        return BadRequest("Invalid desk ID");
-                    }
-                }
-
-                if (desk.StatusId != null)
-                {
-                    var _deskStatus = _repositoryWrapper.DeskStatus.GetDeskStatusById((int)desk.StatusId);
-                    if (_deskStatus is null)
-                    {
-                        return BadRequest("Invalid status ID");
+                        return BadRequest("Invalid room ID");
                     }
                 }
 
@@ -182,6 +247,8 @@ namespace deskManagerApi.Controllers
                 await _repositoryWrapper.Save();
 
                 var _createdDesk = _mapper.Map<GetDeskDto>(_deskEntity);
+
+                _createdDesk = await AddNamesToDtoId(_createdDesk);
 
                 return CreatedAtRoute("GetDeskById", new { id = _createdDesk.Id }, _createdDesk);
             }
@@ -209,8 +276,7 @@ namespace deskManagerApi.Controllers
         ///        "mapYLocation": "10",
         ///        "width": "80",
         ///        "height": "30",
-        ///        "roomId": 1,
-        ///        "status": 1
+        ///        "roomId": 1
         ///     }
         ///
         /// </remarks>
@@ -239,19 +305,10 @@ namespace deskManagerApi.Controllers
 
                 if (desk.RoomId != null)
                 {
-                    var _desk = _repositoryWrapper.Room.GetRoomById((int)desk.RoomId);
+                    var _desk = await _repositoryWrapper.Room.GetRoomById((int)desk.RoomId);
                     if (_desk is null)
                     {
                         return BadRequest("Invalid desk ID");
-                    }
-                }
-
-                if (desk.StatusId != null)
-                {
-                    var _deskStatus = _repositoryWrapper.DeskStatus.GetDeskStatusById((int)desk.StatusId);
-                    if (_deskStatus is null)
-                    {
-                        return BadRequest("Invalid status ID");
                     }
                 }
 
@@ -267,6 +324,8 @@ namespace deskManagerApi.Controllers
                 await _repositoryWrapper.Save();
 
                 var _updatedDesk = _mapper.Map<GetDeskDto>(_deskEntity);
+
+                _updatedDesk = await AddNamesToDtoId(_updatedDesk);
 
                 return Ok(_updatedDesk);
             }
@@ -324,6 +383,36 @@ namespace deskManagerApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task<GetDeskDto> AddNamesToDtoId(GetDeskDto deskMap)
+        {
+            if (deskMap.RoomId != null)
+            {
+                var room = await _repositoryWrapper.Room.GetRoomById((int)deskMap.RoomId);
+                deskMap.RoomName = room.Name;
+            }
+
+            return deskMap;
+        }
+
+        private async Task<IEnumerable<GetDeskDto>> AddNamesToDtoIdArray(IEnumerable<GetDeskDto> desksMap)
+        {
+            var rooms = await _repositoryWrapper.Room.GetAllRooms();
+
+            foreach(var desk in desksMap)
+            {
+                if (desk.RoomId != null)
+                {
+                    desk.RoomName = rooms.FirstOrDefault(r => r.Id == desk.RoomId).Name;
+                }
+            }
+
+            return desksMap;
         }
 
         #endregion

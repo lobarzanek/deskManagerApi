@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using deskManagerApi.Entities.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace deskManagerApi.Models
@@ -72,6 +73,11 @@ namespace deskManagerApi.Models
         /// Gets or sets the collection of Issue Histories.
         /// </summary>
         public ICollection<IssueHistory> IssueHistories { get; set; } = new List<IssueHistory>();
+
+        /// <summary>
+        /// Gets or sets the collection of Reservations.
+        /// </summary>
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 
         #endregion
     }

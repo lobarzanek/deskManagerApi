@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using deskManagerApi.Entities.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace deskManagerApi.Models
@@ -53,15 +54,9 @@ namespace deskManagerApi.Models
         public Room? Room { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of status ID.
-        /// </summary>
-        [ForeignKey("Status")]
-        public int? StatusId;
-
-        /// <summary>
         /// Gets or sets the value of status object.
         /// </summary>
-        public DeskStatus? Status { get; set; }
+        public DeskStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of DesksTeams.
@@ -77,6 +72,11 @@ namespace deskManagerApi.Models
         /// Gets or sets the collection of Items.
         /// </summary>
         public ICollection<Item> Items { get; set; } = new List<Item>();
+
+        /// <summary>
+        /// Gets or sets the collection of Reservations.
+        /// </summary>
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 
         #endregion
     }

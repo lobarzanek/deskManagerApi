@@ -127,7 +127,7 @@ namespace deskManagerApi.Controllers
         ///     POST /issue
         ///     
         ///     {
-        ///        "description": "Issue description"
+        ///        "description": "Issue description",
         ///        "status": 1,
         ///        "deskId": 1,
         ///        "reporterId: 1
@@ -155,14 +155,14 @@ namespace deskManagerApi.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var _user = _repositoryWrapper.User.GetUserById(issue.ReporterId);
+                var _user = await _repositoryWrapper.User.GetUserById(issue.ReporterId);
 
                 if (_user == null)
                 {
                     return BadRequest("Invalid reporter ID");
                 }
 
-                var _desk = _repositoryWrapper.Desk.GetDeskById(issue.DeskId);
+                var _desk = await _repositoryWrapper.Desk.GetDeskById(issue.DeskId);
 
                 if (_desk == null)
                 {
@@ -227,14 +227,14 @@ namespace deskManagerApi.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var _user = _repositoryWrapper.User.GetUserById(issue.ReporterId);
+                var _user = await _repositoryWrapper.User.GetUserById(issue.ReporterId);
 
                 if (_user == null)
                 {
                     return BadRequest("Invalid reporter ID");
                 }
 
-                var _desk = _repositoryWrapper.Desk.GetDeskById(issue.DeskId);
+                var _desk = await _repositoryWrapper.Desk.GetDeskById(issue.DeskId);
 
                 if (_desk == null)
                 {

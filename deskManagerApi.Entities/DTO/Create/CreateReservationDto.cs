@@ -9,29 +9,24 @@ using System.Threading.Tasks;
 
 namespace deskManagerApi.Entities.DTO.Create
 {
-    public class CreateIssueDto
+    public class CreateReservationDto
     {
         #region Properties and indexers
 
         /// <summary>
-        /// Gets or sets the description value of issue.
+        /// Gets or sets the date value of reservation.
         /// </summary>
-        public string Description { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
-        /// Gets or sets the status value of issue.
+        /// Gets or sets the value of User ID.
         /// </summary>
-        public IssueStatus Status { get; set; }
+        public int UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the value of desk ID.
         /// </summary>
         public int DeskId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of user ID who reports the issue.
-        /// </summary>
-        public int ReporterId { get; set; }
 
         #endregion
     }

@@ -8,6 +8,7 @@ using deskManagerApi.Entities.DTO.Update;
 using deskManagerApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 #endregion
 
@@ -60,7 +61,7 @@ namespace deskManagerApi.Controllers
         /// </remarks>
         /// <response code="200">If Room ID is valid</response>
         /// <response code="500">If an internal server error occurred.</response>
-        [HttpGet]
+        [HttpGet(Name = "GetAllRooms")]
         [ProducesResponseType((200), Type = typeof(IEnumerable<GetRoomDto>))]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAllRooms()
@@ -71,7 +72,122 @@ namespace deskManagerApi.Controllers
 
                 var _roomsMap = _mapper.Map<IEnumerable<GetRoomDto>>(_rooms);
 
+                _roomsMap = await AddNamesToDtoIdArray(_roomsMap);
+
                 return Ok(_roomsMap);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a list of all Rooms with basic info.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /room/basic
+        ///
+        /// </remarks>
+        /// <response code="200">If Room ID is valid</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic", Name = "GetAllRoomsBasicInfo")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetRoomBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllRoomsBasicInfo()
+        {
+            try
+            {
+                var _rooms = await _repositoryWrapper.Room.GetAllRooms();
+
+                var _roomsMap = _mapper.Map<IEnumerable<GetRoomBasicInfo>>(_rooms);
+
+                return Ok(_roomsMap);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a list of all Rooms with basic info
+        /// for provided Floor ID.
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /Room/basic/floor/1
+        ///
+        /// </remarks>
+        /// <response code="200">If Room ID is valid</response>
+        /// <response code="404">If Floor ID is not found</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("basic/floor/{id}", Name = "GetAllRoomsBasicInfoForFloorId")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetRoomBasicInfo>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllRoomsBasicInfoForFloorId(int id)
+        {
+            try
+            {
+                if(await _repositoryWrapper.Floor.GetFloorById(id) is null)
+                {
+                    return NotFound();
+                }
+                var _rooms = await _repositoryWrapper.Room.GetAllRoomsByFloorId(id);
+
+                var _roomsMap = _mapper.Map<IEnumerable<GetRoomBasicInfo>>(_rooms);
+
+                return Ok(_roomsMap);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        /// <summary>
+        /// Returns a map of room for provided room ID
+        /// </summary>
+        /// <returns>200 Status Code for success.</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /Room/map/1
+        ///
+        /// </remarks>
+        /// <response code="200">If Room ID is valid</response>
+        /// <response code="404">If Room ID is not found</response>
+        /// <response code="500">If an internal server error occurred.</response>
+        [HttpGet("map/{id}", Name = "GetRoomMap")]
+        [ProducesResponseType((200), Type = typeof(IEnumerable<GetRoomMapDto>))]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetRoomMap(int id, DateTime date)
+        {
+            try
+            {
+                var room = await _repositoryWrapper.Room.GetRoomById(id);
+
+                if (room is null)
+                {
+                    return NotFound();
+                }
+
+                var _map = _mapper.Map<GetRoomMapDto>(room);
+                _map.SvgMap.Desks = await GetDesksForSvgMap(_map, DateOnly.FromDateTime(date));
+
+                return Ok(_map);
+
             }
             catch (Exception ex)
             {
@@ -110,6 +226,8 @@ namespace deskManagerApi.Controllers
                 }
 
                 var _roomMap = _mapper.Map<GetRoomDto>(_room);
+
+                _roomMap = await AddNamesToDtoId(_roomMap);
 
                 return Ok(_roomMap);
             }
@@ -172,6 +290,8 @@ namespace deskManagerApi.Controllers
                 await  _repositoryWrapper.Save();
 
                 var _createdRoom = _mapper.Map<GetRoomDto>(_roomEntity);
+
+                _createdRoom = await AddNamesToDtoId(_createdRoom);
 
                 return CreatedAtRoute("GetRoomById", new { id = _createdRoom.Id }, _createdRoom);
             }
@@ -245,6 +365,8 @@ namespace deskManagerApi.Controllers
 
                 var _updatedRoom = _mapper.Map<GetRoomDto>(_roomEntity);
 
+                _updatedRoom = await AddNamesToDtoId(_updatedRoom);
+
                 return Ok(_updatedRoom);
             }
             catch (Exception ex)
@@ -293,7 +415,6 @@ namespace deskManagerApi.Controllers
                 _repositoryWrapper.Room.DeleteRoom(_roomEntity);
                 await _repositoryWrapper.Save();
 
-
                 return NoContent();
             }
             catch (Exception ex)
@@ -301,6 +422,61 @@ namespace deskManagerApi.Controllers
                 return StatusCode(500, "Internal server error");
             }
 
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task<GetRoomDto> AddNamesToDtoId(GetRoomDto roomMap)
+        {
+            if (roomMap.FloorId != null)
+            {
+                var floor = await _repositoryWrapper.Floor.GetFloorById((int)roomMap.FloorId);
+                roomMap.FloorName = floor.Name;
+            }
+
+            return roomMap;
+        }
+
+        private async Task<IEnumerable<GetRoomDto>> AddNamesToDtoIdArray(IEnumerable<GetRoomDto> roomsMap)
+        {
+            var floors = await _repositoryWrapper.Floor.GetAllFloors();
+
+            foreach (var room in roomsMap)
+            {
+                if (room.FloorId != null)
+                {
+                    room.FloorName = floors.FirstOrDefault(f => f.Id == room.FloorId).Name;
+                }
+            }
+
+            return roomsMap;
+        }
+
+        private async Task<ICollection<GetDeskMapViewDto>> GetDesksForSvgMap(GetRoomMapDto map, DateOnly date)
+        {
+            var items = await _repositoryWrapper.Item.GetAllItems();
+            var roomDesks = await _repositoryWrapper.Desk.GetAllDesksByRoomId(map.Id);
+            var reservations = await _repositoryWrapper.Reservation.GetAllReservations();
+            var dateReservations = reservations.Where(r => DateOnly.FromDateTime(r.Date) == date).ToList();
+            var mappedRoomDesks = _mapper.Map<ICollection<GetDeskMapViewDto>>(roomDesks);
+
+            foreach(var desk in mappedRoomDesks)
+            {
+                desk.Mouse = items.Any(i => i.DeskId == desk.Id && i.Type == ItemType.Mouse);
+                desk.Keyboard = items.Any(i => i.DeskId == desk.Id && i.Type == ItemType.Keyboard);
+                desk.DockStation = items.Any(i => i.DeskId == desk.Id && i.Type == ItemType.DockStation);
+                desk.MonitorNumber = items.Where(i => i.DeskId == desk.Id && i.Type == ItemType.Monitor).Count();
+
+                if(desk.Status != DeskStatus.Broken.ToString())
+                {
+                    desk.Status = dateReservations.Any(r => r.DeskId == desk.Id) ?
+                        DeskStatus.Claimed.ToString() : DeskStatus.Free.ToString();
+                }
+            }
+
+            return mappedRoomDesks;
         }
 
         #endregion

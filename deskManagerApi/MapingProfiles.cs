@@ -4,6 +4,7 @@ using AutoMapper;
 using deskManagerApi.Entities.DTO.Create;
 using deskManagerApi.Entities.DTO.Get;
 using deskManagerApi.Entities.DTO.Update;
+using deskManagerApi.Entities.Models;
 using deskManagerApi.Models;
 
 #endregion
@@ -26,31 +27,45 @@ namespace deskManagerApi.Helpers
             CreateMap<Brand, GetBrandDto>();
             CreateMap<Building, GetBuildingDto>();
             CreateMap<Desk, GetDeskDto>();
-            CreateMap<DeskStatus, GetDeskStatusDto>();
+            CreateMap<Desk, GetDeskBasicInfo>();
+            CreateMap<Desk, GetDeskMapViewDto>()
+                .ForMember(d => d.Status, conf => 
+                conf.MapFrom(s => s.Status.ToString()));
             CreateMap<Floor, GetFloorDto>();
+            CreateMap<Floor, GetFloorBasicInfo>();
             CreateMap<Issue, GetIssueDto>();
             CreateMap<Item, GetItemDto>();
             CreateMap<Room, GetRoomDto>();
+            CreateMap<Room, GetRoomBasicInfo>();
+            CreateMap<Room, GetRoomMapDto>()
+                .ForMember(r => r.SvgMap, conf =>
+                conf.MapFrom(r => new SVGMap() 
+                { 
+                    mapViewBox = r.mapViewBox, 
+                    mapHeight = r.mapHeight, 
+                    mapWidth = r.mapWidth,
+                    mapXmlns = r.mapXmlns,
+                }));
             CreateMap<Team, GetTeamDto>();
             CreateMap<User, GetUserDto>();
+            CreateMap<User, GetUserBasicInfo>().ForMember(d => d.Name, conf => conf.MapFrom(u => $"{u.FirstName} {u.LastName}"));
 
             // Create DTO to Model
             CreateMap<CreateBrandDto, Brand>();
             CreateMap<CreateBuildingDto, Building>();
             CreateMap<CreateDeskDto, Desk>();
-            CreateMap<CreateDeskStatusDto, DeskStatus>();
             CreateMap<CreateFloorDto, Floor>();
             CreateMap<CreateIssueDto, Issue>();
             CreateMap<CreateItemDto, Item>();
             CreateMap<CreateRoomDto, Room>();
             CreateMap<CreateTeamDto, Team>();
             CreateMap<CreateUserDto, User>();
+            CreateMap<CreateReservationDto, Reservation>();
 
             // Update DTO to Model
             CreateMap<UpdateBrandDto, Brand>();
             CreateMap<UpdateBuildingDto, Building>();
             CreateMap<UpdateDeskDto, Desk>();
-            CreateMap<UpdateDeskStatusDto, DeskStatus>();
             CreateMap<UpdateFloorDto, Floor>();
             CreateMap<UpdateIssueDto, Issue>();
             CreateMap<UpdateItemDto, Item>();

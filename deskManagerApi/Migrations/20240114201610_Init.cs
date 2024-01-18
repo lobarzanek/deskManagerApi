@@ -251,6 +251,33 @@ namespace deskManagerApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    DeskId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_reservations_desks_DeskId",
+                        column: x => x.DeskId,
+                        principalTable: "desks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_reservations_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "issueHistories",
                 columns: table => new
                 {
@@ -339,6 +366,16 @@ namespace deskManagerApi.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_reservations_DeskId",
+                table: "reservations",
+                column: "DeskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_reservations_UserId",
+                table: "reservations",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_rooms_FloorId",
                 table: "rooms",
                 column: "FloorId");
@@ -359,6 +396,9 @@ namespace deskManagerApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "items");
+
+            migrationBuilder.DropTable(
+                name: "reservations");
 
             migrationBuilder.DropTable(
                 name: "issues");

@@ -1,4 +1,5 @@
-﻿using deskManagerApi.Models;
+﻿using deskManagerApi.Entities.Models;
+using deskManagerApi.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace deskManagerApi.Entities.DTO.Update
+namespace deskManagerApi.Entities.DTO.Get
 {
-    public class UpdateDeskDto
+    public class GetDeskMapViewDto
     {
         #region Properties and indexers
 
@@ -22,6 +23,26 @@ namespace deskManagerApi.Entities.DTO.Update
         /// Gets or sets the name value of desk.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value if any mouse is attached to the desk.
+        /// </summary>
+        public bool Mouse { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value if any keyboard is attached to the desk.
+        /// </summary>
+        public bool Keyboard { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value if any dockStation is attached to the desk.
+        /// </summary>
+        public bool DockStation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of how many monitors are attached to the desk.
+        /// </summary>
+        public int MonitorNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the value of horizontal map location.
@@ -44,14 +65,9 @@ namespace deskManagerApi.Entities.DTO.Update
         public string? Height { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of room ID.
+        /// Gets or sets the value of desk status.
         /// </summary>
-        public int? RoomId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of status ID.
-        /// </summary>
-        public DeskStatus Status { get; set; }
+        public string Status { get; set; }
 
         #endregion
     }
