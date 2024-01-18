@@ -38,7 +38,7 @@ namespace deskManagerApi.Entities.DTO.Create
         /// <summary>
         /// Gets or sets the value of xmlns.
         /// </summary>
-        public string mapXmlns { get; set; } = "http://www.w3.org/2000/svg";
+        public string? mapXmlns { get; set; } = "http://www.w3.org/2000/svg";
 
         /// <summary>
         /// Gets or sets the value of floor ID.
