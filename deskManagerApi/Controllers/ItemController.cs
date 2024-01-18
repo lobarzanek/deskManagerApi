@@ -187,6 +187,12 @@ namespace deskManagerApi.Controllers
                     {
                         return BadRequest("Invalid desk ID");
                     }
+
+                    item.Status = ItemStatus.Used;
+                }
+                else if(item.DeskId == null && item.Status != ItemStatus.Broken)
+                {
+                    item.Status = ItemStatus.Free;
                 }
 
                 var _itemEntity = _mapper.Map<Item>(item);
@@ -254,7 +260,7 @@ namespace deskManagerApi.Controllers
 
                 if (item.OwnerId != null)
                 {
-                    var _owner = _repositoryWrapper.User.GetUserById((int)item.OwnerId);
+                    var _owner = await _repositoryWrapper.User.GetUserById((int)item.OwnerId);
                     if (_owner is null)
                     {
                         return BadRequest("Invalid owner ID");
@@ -263,7 +269,7 @@ namespace deskManagerApi.Controllers
 
                 if (item.BrandId != null)
                 {
-                    var _brand = _repositoryWrapper.Brand.GetBrandById((int)item.BrandId);
+                    var _brand = await _repositoryWrapper.Brand.GetBrandById((int)item.BrandId);
                     if (_brand is null)
                     {
                         return BadRequest("Invalid brand ID");
@@ -272,11 +278,17 @@ namespace deskManagerApi.Controllers
 
                 if (item.DeskId != null)
                 {
-                    var _desk = _repositoryWrapper.Desk.GetDeskById((int)item.DeskId);
+                    var _desk = await _repositoryWrapper.Desk.GetDeskById((int)item.DeskId);
                     if (_desk is null)
                     {
                         return BadRequest("Invalid desk ID");
                     }
+
+                    item.Status = ItemStatus.Used;
+                }
+                else if (item.DeskId == null && item.Status != ItemStatus.Broken)
+                {
+                    item.Status = ItemStatus.Free;
                 }
 
                 var _itemEntity = await _repositoryWrapper.Item.GetItemById(item.Id);
